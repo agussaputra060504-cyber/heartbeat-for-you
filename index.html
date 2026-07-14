@@ -17,7 +17,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            position: fixed; /* Mencegah pull-to-refresh atau geser layar di mobile */
+            position: fixed; 
         }
 
         /* Welcome Screen */
@@ -85,29 +85,45 @@
         #heart { z-index: 1; display: none; }
         #falling-hearts { z-index: 2; display: none; pointer-events: none; }
 
-        /* Message Card (Optimized for 1 Screen View) */
+        /* UPGRADED: Message Card Premium Look */
         #message-card {
             position: absolute;
             z-index: 5;
-            background: rgba(18, 2, 5, 0.94);
-            border: 1px solid rgba(230, 0, 38, 0.6);
-            padding: 22px;
-            border-radius: 20px;
-            max-width: 330px;
-            width: 85%;
-            box-shadow: 0 0 35px rgba(230, 0, 38, 0.5);
+            background: linear-gradient(135deg, rgba(28, 4, 10, 0.93) 0%, rgba(15, 2, 5, 0.97) 100%);
+            padding: 24px 22px;
+            border-radius: 24px;
+            max-width: 340px;
+            width: 88%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(239, 35, 60, 0.2);
             text-align: left;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             opacity: 0;
-            transform: scale(0.9);
-            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.9) translateY(10px);
+            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
             pointer-events: none;
             box-sizing: border-box;
+            
+            /* Efek Gradient Border tipis yang mewah */
+            position: relative;
+        }
+        
+        #message-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 24px;
+            padding: 1px; /* Ketebalan border */
+            background: linear-gradient(135deg, rgba(239, 35, 60, 0.6), rgba(255, 77, 109, 0.1) 40%, rgba(0,0,0,0) 70%, rgba(239, 35, 60, 0.3));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
 
         #message-card.show {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1) translateY(0);
             pointer-events: auto;
         }
 
@@ -116,47 +132,74 @@
         #close-btn {
             float: right;
             cursor: pointer;
-            font-size: 1.3rem;
-            color: #888;
-            transition: color 0.2s;
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            transition: all 0.2s;
             line-height: 1;
+            padding: 4px;
         }
 
-        #close-btn:hover { color: #ff1e3c; }
+        #close-btn:hover { 
+            color: #ef233c; 
+            transform: scale(1.1);
+        }
 
         h2 {
-            color: #ef233c;
-            font-size: 0.8rem;
+            color: #ff4d6d;
+            font-size: 0.75rem;
             margin-top: 0;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.9;
         }
 
         .recipient {
-            font-weight: 600;
-            font-size: 1.15rem;
+            font-weight: 700;
+            font-size: 1.25rem;
             margin-top: 0;
-            margin-bottom: 10px;
+            margin-bottom: 4px;
             color: #ffe5ec;
+            text-shadow: 0 2px 10px rgba(255, 229, 236, 0.2);
+        }
+        
+        /* Aksen dekorasi pemanis visual */
+        .card-divider {
+            width: 35px;
+            height: 2px;
+            background: #ef233c;
+            margin-bottom: 15px;
+            border-radius: 2px;
+            box-shadow: 0 0 8px #ef233c;
         }
 
         .message {
             font-size: 0.88rem;
-            line-height: 1.55;
-            color: #f7f7f7;
+            line-height: 1.6;
+            color: #e0e0e0;
             font-weight: 300;
             margin: 0;
+            text-align: justify;
+        }
+        
+        /* Style manis untuk mix bahasa Inggris */
+        .message em {
+            font-style: italic;
+            color: #ff85a1;
+            font-weight: 400;
         }
 
         .signature {
             text-align: right;
-            font-size: 0.85rem;
-            color: #ff4d6d;
-            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #ef233c;
+            margin-top: 18px;
             margin-bottom: 0;
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(239, 35, 60, 0.4);
         }
 
         @keyframes pulse {
@@ -165,12 +208,13 @@
             100% { transform: scale(1); }
         }
 
-        /* Responsive adjustments agar muat 1 layar hp kecil */
+        /* Responsive layar super pendek */
         @media (max-height: 667px) {
-            #message-card { padding: 18px; width: 88%; }
+            #message-card { padding: 18px 16px; width: 90%; }
             .message { font-size: 0.82rem; line-height: 1.5; }
-            .recipient { margin-bottom: 6px; font-size: 1.05rem; }
-            .signature { margin-top: 10px; }
+            .recipient { font-size: 1.15rem; }
+            .card-divider { margin-bottom: 10px; }
+            .signature { margin-top: 12px; }
         }
     </style>
 </head>
@@ -186,13 +230,15 @@
     <canvas id="heart"></canvas>
     <canvas id="falling-hearts"></canvas>
 
+    <!-- Kotak Pesan yang Baru & Lebih Mewah -->
     <div id="message-card" class="hidden">
         <span id="close-btn">&times;</span>
-        <h2>JUST FOR YOU</h2>
+        <h2>Just For You</h2>
         <p class="recipient">Hai cantikk,</p>
+        <div class="card-divider"></div>
         <p class="message">
-            I made this code not just to show off, tapi karena kadang *it's way easier* buat aku nulis apa yang ada di kepala dibanding ngomong langsung.<br><br>
-            You know I'm not the type who's good with sweet words. Tapi sejak ada kamu, *everything just feels different in a good way*. Hal-hal kecil yang kita laluin bareng, or even our random late-night talks, selalu berhasil bikin aku senyum sendiri.<br><br>
+            I made this code not just to show off, tapi karena kadang <em>it's way easier</em> buat aku nulis apa yang ada di kepala dibanding ngomong langsung.<br><br>
+            You know I'm not the type who's good with sweet words. Tapi sejak ada kamu, <em>everything just feels different in a good way</em>. Hal-hal kecil yang kita laluin bareng, or even our random late-night talks, selalu berhasil bikin aku senyum sendiri.<br><br>
             Thank you ya sayanggg for being by my side and accepting me just the way I am. Let's make more good memories ahead, shall we?
         </p>
         <p class="signature">~ Putra</p>
@@ -236,7 +282,6 @@
                 this.t = (index / total) * Math.PI * 2;
                 this.word = words[Math.floor(Math.random() * words.length)];
                 
-                // Menyesuaikan skala detak jantung berdasarkan lebar layar HP/PC agar pas di tengah
                 const isMobile = canvasWidth < 600;
                 this.baseScale = isMobile ? (6 + Math.random() * 2) : (9 + Math.random() * 3);
                 
