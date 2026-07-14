@@ -188,14 +188,14 @@
 
     <div id="message-card" class="hidden">
         <span id="close-btn">&times;</span>
-        <h2>KHUSUS UNTUK LAILA</h2>
+        <h2>UNTUK LAILA</h2>
         <p class="recipient">Hai cantikk,</p>
         <p class="message">
-            Mungkin aku bukan tipe cowok yang jago merangkai kata-kata puitis secara langsung. Karena itu, lewat barisan kode sederhana ini, aku ingin menyampaikan apa yang ada di kepalaku selama ini.<br><br>
-            Sama seperti detak animasi di layar ini yang bergerak tanpa henti, setiap hari pikiranku juga selalu berputar dan kembali ke kamu. Bagiku, kehadiran kamu itu membawa warna baru yang bikin hari-hariku jadi jauh lebih bermakna.<br><br>
-            Makasih ya sayanggg sudah hadir dan jadi bagian cerita dalam hidupku. Tetap sama-sama terus di sampingku ya? ❤️
+            Aku sengaja bikin ini bukan cuma buat pamer kode, tapi karena kadang isi kepalaku terlalu penuh kalau harus diomongin langsung.<br><br>
+            Kamu tahu kan, aku bukan tipe orang yang pinter ngerangkai kata-kata manis. Tapi sejak ada kamu, banyak hal sederhana yang tiba-tiba terasa jauh lebih hidup. Hal-hal kecil yang kita laluin bareng, cerita-cerita nggak penting yang kita bagi, semuanya selalu berhasil bikin aku bersyukur.<br><br>
+            Makasih ya sayanggg udah bersedia jalan di samping aku, berbagi tawa, dan nerima aku apa adanya. Semoga waktu-waktu ke depan tetap selalu seru buat kita lewati berdua.
         </p>
-        <p class="signature">~ dari Putra yang selalu sayang kamu</p>
+        <p class="signature">~ Putra</p>
     </div>
 
     <script>
@@ -211,8 +211,7 @@
 
         let animationHeartId, animationFallingId;
         
-        // Panggilan khas kamu ("sayanggg", "cantikk") dimasukkan ke dalam kata-kata yang terbang
-        const words = ["Laila", "sayanggg", "cantikk", "Bahagiaku", "Putra & Laila", "Semogaselamanya", "❤️", "My Favorite", "Salingjaga"];
+        const words = ["Laila", "sayanggg", "cantikk", "My Love", "Beautiful", "Forever", "❤️", "Mine", "Precious", "Always", "With You", "Heart"];
 
         function resizeCanvases() {
             canvasHeart.width = window.innerWidth;
@@ -228,31 +227,30 @@
             return { x: x * scale, y: y * scale };
         }
 
-        // --- SISTEM PARTIKEL HATI BESAR ---
         class HeartParticle {
-            constructor(canvasWidth, canvasHeight) {
-                this.reset(canvasWidth, canvasHeight);
+            constructor(canvasWidth, canvasHeight, index, total) {
+                this.reset(canvasWidth, canvasHeight, index, total);
             }
 
-            reset(canvasWidth, canvasHeight) {
-                this.t = Math.random() * Math.PI * 2;
+            reset(canvasWidth, canvasHeight, index, total) {
+                this.t = (index / total) * Math.PI * 2;
                 this.word = words[Math.floor(Math.random() * words.length)];
-                this.scale = Math.random() * 8 + 4;
+                this.baseScale = 9 + Math.random() * 3;
                 
-                const point = getHeartPoint(this.t, this.scale);
+                const point = getHeartPoint(this.t, this.baseScale);
                 this.targetX = canvasWidth / 2 + point.x;
                 this.targetY = canvasHeight / 2 + point.y;
                 
                 this.x = Math.random() * canvasWidth;
                 this.y = Math.random() * canvasHeight;
                 
-                this.speed = Math.random() * 0.02 + 0.01;
-                this.opacity = Math.random() * 0.5 + 0.5;
-                this.size = Math.random() * 11 + 9;
+                this.speed = Math.random() * 0.02 + 0.015;
+                this.opacity = Math.random() * 0.4 + 0.6;
+                this.size = Math.random() * 8 + 10;
             }
 
             update(beatFactor) {
-                const point = getHeartPoint(this.t, this.scale * beatFactor);
+                const point = getHeartPoint(this.t, this.baseScale * beatFactor);
                 const actualTargetX = canvasHeart.width / 2 + point.x;
                 const actualTargetY = canvasHeart.height / 2 + point.y;
 
@@ -263,11 +261,12 @@
             draw() {
                 ctxHeart.fillStyle = `rgba(239, 35, 60, ${this.opacity})`;
                 ctxHeart.font = `bold ${this.size}px sans-serif`;
+                ctxHeart.textAlign = "center";
+                ctxHeart.textBaseline = "middle";
                 ctxHeart.fillText(this.word, this.x, this.y);
             }
         }
 
-        // --- SISTEM ANIMASI EMOJI BERJATUHAN ---
         class FallingHeart {
             constructor() {
                 this.reset();
@@ -302,11 +301,12 @@
 
         const heartParticles = [];
         const fallingHearts = [];
+        const totalParticles = 250; 
 
         function initParticles() {
             heartParticles.length = 0;
-            for (let i = 0; i < 150; i++) {
-                heartParticles.push(new HeartParticle(canvasHeart.width, canvasHeart.height));
+            for (let i = 0; i < totalParticles; i++) {
+                heartParticles.push(new HeartParticle(canvasHeart.width, canvasHeart.height, i, totalParticles));
             }
 
             fallingHearts.length = 0;
