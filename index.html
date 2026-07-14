@@ -21,6 +21,69 @@
             perspective: 1000px;
         }
 
+        /* --- LAYAR LOADING PRELOADER (DARI VIDEO REELS) --- */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #060001;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease;
+        }
+        .loading-heart {
+            font-size: 30px;
+            color: #ff4d6d;
+            animation: heartPulsePreload 1s infinite;
+            filter: drop-shadow(0 0 15px #e60026);
+            margin-bottom: 15px;
+        }
+        .loading-title {
+            font-size: 1.5rem;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            color: #ffe5ec;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 77, 109, 0.4);
+        }
+        .loading-text {
+            font-size: 0.75rem;
+            color: #a0a0a0;
+            font-family: 'Courier New', Courier, monospace;
+            height: 15px;
+            margin-bottom: 20px;
+        }
+        .progress-container {
+            width: 120px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ef233c, #ff85a1);
+            box-shadow: 0 0 8px #ef233c;
+            transition: width 0.1s linear;
+        }
+        .progress-percentage {
+            font-size: 0.7rem;
+            color: #ff4d6d;
+            font-family: monospace;
+        }
+
+        @keyframes heartPulsePreload {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- LAYAR UTAMA & PERSPEKTIF --- */
         .perspective-container {
             position: absolute;
             z-index: 10;
@@ -43,7 +106,6 @@
             transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        /* Welcome Screen Card */
         #welcome-screen {
             background: linear-gradient(135deg, rgba(35, 6, 15, 0.9) 0%, rgba(15, 2, 5, 0.95) 100%);
             padding: 35px 24px;
@@ -134,7 +196,6 @@
             box-shadow: 0 5px 10px rgba(217, 4, 41, 0.4);
         }
 
-        /* Canvases */
         canvas {
             position: absolute;
             top: 0; left: 0;
@@ -145,7 +206,101 @@
         #heart { z-index: 2; display: none; }
         #falling-hearts { z-index: 3; display: none; pointer-events: none; }
 
-        /* Message Card */
+        /* --- ANIMASI TANAMAN DAN BUNGA MEKAR (DARI VIDEO REELS) --- */
+        #garden-container {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            z-index: 4;
+            display: none;
+            pointer-events: none;
+        }
+        .flower-stem {
+            position: absolute;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 180px;
+            background: linear-gradient(to top, #1b4332, #2d6a4f);
+            border-radius: 4px;
+            transition: bottom 2.5s cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+        .flower-stem.grow {
+            bottom: 0px;
+        }
+        .leaf {
+            position: absolute;
+            width: 25px;
+            height: 12px;
+            background: #2d6a4f;
+            border-radius: 100px 0 100px 0;
+            opacity: 0;
+            transform: scale(0);
+            transition: transform 1s ease 1.5s, opacity 1s ease 1.5s;
+        }
+        .leaf.left {
+            left: -20px;
+            top: 80px;
+            transform-origin: right bottom;
+            transform: rotate(-25deg);
+        }
+        .leaf.right {
+            right: -20px;
+            top: 50px;
+            border-radius: 0 100px 0 100px;
+            transform-origin: left bottom;
+            transform: rotate(25deg);
+        }
+        .flower-stem.grow .leaf {
+            opacity: 1;
+            transform: scale(1) rotate(var(--rot));
+        }
+        .flower-head {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            width: 40px;
+            height: 40px;
+            transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 2s;
+        }
+        .flower-stem.grow .flower-head {
+            transform: translateX(-50%) scale(1);
+        }
+        .petal {
+            position: absolute;
+            background: linear-gradient(to bottom, #ffb3c6, #ff4d6d);
+            border-radius: 50%;
+            width: 20px;
+            height: 35px;
+            left: 10px;
+            top: 2.5px;
+            transform-origin: center bottom;
+        }
+        .petal:nth-child(1) { transform: rotate(0deg); }
+        .petal:nth-child(2) { transform: rotate(60deg); }
+        .petal:nth-child(3) { transform: rotate(120deg); }
+        .petal:nth-child(4) { transform: rotate(180deg); }
+        .petal:nth-child(5) { transform: rotate(240deg); }
+        .petal:nth-child(6) { transform: rotate(300deg); }
+        
+        .flower-center {
+            position: absolute;
+            background: #ffb703;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            left: 12px;
+            top: 12px;
+            box-shadow: 0 0 8px rgba(255,183,3,0.6);
+        }
+
+        /* --- LAYAR PESAN UTAMA MUNCUL --- */
         #message-card {
             background: linear-gradient(135deg, rgba(35, 6, 15, 0.96) 0%, rgba(15, 2, 5, 0.98) 100%);
             padding: 26px 24px;
@@ -273,15 +428,22 @@
 </head>
 <body>
 
-    <!-- MEMANGGIL FILE LOKAL YANG SUDAH KAMU DOWNLOAD -->
     <audio id="bg-music" loop preload="auto">
         <source src="thinking.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Canvas Fase Awal -->
+    <div id="loading-screen">
+        <div class="loading-heart">💖</div>
+        <div class="loading-title">blooming for you</div>
+        <div class="loading-text" id="loading-phrases">initializing systems...</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="bar"></div>
+        </div>
+        <div class="progress-percentage" id="percent">0%</div>
+    </div>
+
     <canvas id="initial-rain"></canvas>
 
-    <!-- Kontainer Layar Awal -->
     <div class="perspective-container" id="welcome-container">
         <div id="welcome-screen-wrapper" class="alive-flow">
             <div id="welcome-screen">
@@ -294,11 +456,37 @@
         </div>
     </div>
 
-    <!-- Canvas Fase Dua -->
     <canvas id="heart"></canvas>
     <canvas id="falling-hearts"></canvas>
 
-    <!-- Kontainer Layar Pesan Utama -->
+    <div id="garden-container">
+        <div class="flower-stem" id="stem1" style="left: 50%;">
+            <div class="leaf left" style="--rot: -25deg;"></div>
+            <div class="leaf right" style="--rot: 25deg;"></div>
+            <div class="flower-head">
+                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+                <div class="flower-center"></div>
+            </div>
+        </div>
+        <div class="flower-stem" id="stem2" style="left: 25%; height: 140px; transition-delay: 0.4s;">
+            <div class="leaf left" style="--rot: -30deg;"></div>
+            <div class="flower-head" style="transition-delay: 2.2s; transform: translateX(-50%) scale(0) scale(0.8);">
+                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+                <div class="flower-center"></div>
+            </div>
+        </div>
+        <div class="flower-stem" id="stem3" style="left: 75%; height: 150px; transition-delay: 0.2s;">
+            <div class="leaf right" style="--rot: 30deg;"></div>
+            <div class="flower-head" style="transition-delay: 2.4s; transform: translateX(-50%) scale(0) scale(0.85);">
+                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+                <div class="flower-center"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="perspective-container">
         <div id="message-card" class="hidden">
             <div class="glare" id="card-glare"></div>
@@ -307,11 +495,11 @@
             <p class="recipient">Hai cantikk,</p>
             <div class="card-divider"></div>
             <p class="message">
-    Hai cantikk,<br>
-    <em>I actually made this just because I was bored</em>, tapi kamu tahu sendiri kan kalau aku paling payah kalau harus ngomong manis langsung di depanmu.<br><br>
-    <em>But honestly, since you came into my life, everything just gets so much more fun</em>. Dari hal-hal random yang kita bahas sampai <em>our late-night talks</em>, selalu sukses bikin hari-hari aku yang biasa aja jadi lebih bermakna. <em>You are literally the comfiest home I’ve ever had</em>.<br><br>
-    Makasih ya sayanggg <em>for always being so patient, staying by my side, and accepting all my flaws. Let's build more ridiculous, fun, and happy memories together, okay?</em>
-</p>
+                Hai cantikk,<br>
+                <em>I actually made this just because I was bored</em>, tapi kamu tahu sendiri kan kalau aku paling payah kalau harus ngomong manis langsung di depanmu.<br><br>
+                <em>But honestly, since you came into my life, everything just gets so much more fun</em>. Dari hal-hal random yang kita bahas sampai <em>our late-night talks</em>, selalu sukses bikin hari-hari aku yang biasa aja jadi lebih bermakna. <em>You are literally the comfiest home I’ve ever had</em>.<br><br>
+                Makasih ya sayanggg <em>for always being so patient, staying by my side, and accepting all my flaws. Let's build more ridiculous, fun, and happy memories together, okay?</em>
+            </p>
             <p class="signature">~ Putra</p>
         </div>
     </div>
@@ -326,6 +514,7 @@
         const canvasFalling = document.getElementById('falling-hearts');
         const messageCard = document.getElementById('message-card');
         const closeBtn = document.getElementById('close-btn');
+        const gardenContainer = document.getElementById('garden-container');
         
         const ctxRain = canvasRain.getContext('2d');
         const ctxHeart = canvasHeart.getContext('2d');
@@ -336,6 +525,45 @@
         
         const words = ["Laila", "sayanggg", "cantikk", "My Love", "Beautiful", "Forever", "❤️", "Mine", "Precious", "Always", "With You", "Heart"];
         const rainWords = ["Special For Laila", "Pouring my heart into pixels", "Laila", "❤️", "Beautiful", "My Love"];
+        
+        // Frasa Preloader
+        const phrases = [
+            "gathering every proof...",
+            "planning something sweet...",
+            "loading assets...",
+            "almost ready to bloom..."
+        ];
+
+        // LOGIKA LOADING PRELOADER
+        window.addEventListener('DOMContentLoaded', () => {
+            const bar = document.getElementById('bar');
+            const percent = document.getElementById('percent');
+            const textEl = document.getElementById('loading-phrases');
+            let progress = 0;
+
+            // Transisi teks preloader secara berkala
+            let phraseIdx = 0;
+            const phraseInterval = setInterval(() => {
+                phraseIdx = (phraseIdx + 1) % phrases.length;
+                textEl.innerText = phrases[phraseIdx];
+            }, 1200);
+
+            const loadTimer = setInterval(() => {
+                progress += Math.floor(Math.random() * 4) + 1;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(loadTimer);
+                    clearInterval(phraseInterval);
+                    setTimeout(() => {
+                        const preloader = document.getElementById('loading-screen');
+                        preloader.style.opacity = '0';
+                        setTimeout(() => preloader.classList.add('hidden'), 800);
+                    }, 500);
+                }
+                bar.style.width = progress + '%';
+                percent.innerText = progress + '%';
+            }, 80);
+        });
 
         function resizeCanvases() {
             canvasRain.width = window.innerWidth;
@@ -517,17 +745,15 @@
         window.addEventListener('touchmove', handleGlobalTilt, { passive: true });
         window.addEventListener('touchend', resetGlobalTilt);
 
-        // KLIK TOMBOL & EKSEKUSI PEMUTARAN AUDIO LOKAL
+        // KLIK TOMBOL BUKA SEKARANG
         startBtn.addEventListener('click', () => {
             bgMusic.muted = false;
             bgMusic.volume = 1.0;
             
             const forcePlayLocal = () => {
                 bgMusic.play().then(() => {
-                    console.log("Sukses memutar file lokal!");
+                    console.log("Sukses memutar audio!");
                 }).catch(err => {
-                    console.log("Ditolak browser sistem lokal, memicu fallback...", err);
-                    // Force play cadangan
                     bgMusic.play();
                 });
             };
@@ -545,14 +771,24 @@
                 welcomeContainer.classList.add('hidden');
             }, 800);
 
+            // Munculkan Canvas Hati & Animasi Bunga
             canvasHeart.style.display = 'block';
             canvasFalling.style.display = 'block';
+            gardenContainer.style.display = 'block';
             
             resizeCanvases();
             initParticles();
             animateHeart();
             animateFalling();
 
+            // Memicu pertumbuhan bunga tanaman (CSS Transition)
+            setTimeout(() => {
+                document.getElementById('stem1').classList.add('grow');
+                document.getElementById('stem2').classList.add('grow');
+                document.getElementById('stem3').classList.add('grow');
+            }, 200);
+
+            // Jeda 5 detik seperti sebelumnya untuk merenungkan keindahan visual sebelum surat dibaca
             setTimeout(() => {
                 messageCard.classList.remove('hidden');
                 setTimeout(() => {
