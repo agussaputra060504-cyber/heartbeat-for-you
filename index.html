@@ -18,10 +18,10 @@
             justify-content: center;
             align-items: center;
             position: fixed; 
-            perspective: 1000px; /* Kedalaman efek 3D */
+            perspective: 1000px;
         }
 
-        /* Pembungkus Global 3D untuk elemen layar */
+        /* Pembungkus Global 3D */
         .perspective-container {
             position: absolute;
             z-index: 10;
@@ -34,7 +34,7 @@
             transform-style: preserve-3d;
         }
 
-        /* UPGRADED: Welcome Screen dengan Efek 3D Timbul & Hidup */
+        /* Welcome Screen */
         #welcome-screen {
             background: linear-gradient(135deg, rgba(35, 6, 15, 0.9) 0%, rgba(15, 2, 5, 0.95) 100%);
             padding: 35px 24px;
@@ -54,7 +54,6 @@
             transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        /* Border Glow untuk Welcome Screen & Message Card */
         #welcome-screen::before, #message-card::before {
             content: "";
             position: absolute;
@@ -68,7 +67,6 @@
             pointer-events: none;
         }
 
-        /* Glare Efek Kilauan Kaca */
         .glare {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -85,7 +83,7 @@
             animation: heartPulse 0.9s infinite;
             filter: drop-shadow(0 0 25px #e60026);
             cursor: default;
-            transform: translateZ(40px); /* Sangat timbul */
+            transform: translateZ(40px);
             margin-bottom: 10px;
         }
 
@@ -130,22 +128,28 @@
             box-shadow: 0 5px 10px rgba(217, 4, 41, 0.4);
         }
 
-        /* Teks Petunjuk Loading Sebelum Kartu Muncul */
+        /* Teks Transisi Menunggu di Bawah Layar yang Aesthetic */
         #loading-text {
             position: absolute;
+            bottom: 12%; 
             z-index: 4;
             color: #ff85a1;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 0.8rem;
-            letter-spacing: 3px;
+            font-size: 0.78rem;
+            letter-spacing: 2px;
             font-weight: bold;
             text-align: center;
-            text-shadow: 0 0 10px rgba(255, 77, 109, 0.6);
+            max-width: 85%;
+            line-height: 1.5;
+            text-shadow: 0 0 12px rgba(255, 133, 161, 0.5);
             opacity: 0;
-            transform: scale(0.9) translateZ(10px);
-            transition: all 0.8s ease;
+            transform: scale(0.9) translateZ(15px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
             pointer-events: none;
-            animation: textBreath 2s ease-in-out infinite alternate;
+        }
+        
+        .pulse-glow {
+            animation: breathGlow 2s ease-in-out infinite alternate;
         }
 
         /* Canvases */
@@ -160,7 +164,7 @@
         #heart { z-index: 1; display: none; }
         #falling-hearts { z-index: 2; display: none; pointer-events: none; }
 
-        /* UPGRADED: Message Card Premium 3D */
+        /* Message Card */
         #message-card {
             background: linear-gradient(135deg, rgba(35, 6, 15, 0.96) 0%, rgba(15, 2, 5, 0.98) 100%);
             padding: 26px 24px;
@@ -183,7 +187,6 @@
             pointer-events: none;
         }
         
-        /* Animasi Mengambang Halus / Bernapas */
         .alive-flow {
             animation: floatAlive 4.5s ease-in-out infinite alternate;
         }
@@ -280,16 +283,16 @@
             transform: translateZ(35px);
         }
 
-        /* Kumpulan Keyframe Animasi Murni CSS */
+        /* Kumpulan Keyframes CSS */
         @keyframes heartPulse {
             0% { transform: translateZ(40px) scale(1); }
             50% { transform: translateZ(45px) scale(1.08); }
             100% { transform: translateZ(40px) scale(1); }
         }
 
-        @keyframes textBreath {
-            0% { transform: scale(0.95); opacity: 0.5; }
-            100% { transform: scale(1.02); opacity: 1; }
+        @keyframes breathGlow {
+            0% { transform: scale(0.96) translateZ(15px); opacity: 0.4; text-shadow: 0 0 4px rgba(255, 133, 161, 0.3); }
+            100% { transform: scale(1.02) translateZ(15px); opacity: 0.95; text-shadow: 0 0 15px rgba(255, 133, 161, 0.7); }
         }
 
         @media (max-height: 667px) {
@@ -299,6 +302,7 @@
             .recipient { font-size: 1.15rem; }
             .card-divider { margin-bottom: 12px; }
             .signature { margin-top: 14px; }
+            #loading-text { bottom: 8%; font-size: 0.72rem; }
         }
     </style>
 </head>
@@ -318,8 +322,8 @@
     <canvas id="heart"></canvas>
     <canvas id="falling-hearts"></canvas>
     
-    <!-- Teks Transisi Penarik Perhatian -->
-    <div id="loading-text">GENERATING SOMETHING SPECIAL FOR YOU...</div>
+    <!-- Teks Transisi Menunggu di Bawah Layar -->
+    <div id="loading-text" class="pulse-glow">Pouring my heart into pixels, wait a second...</div>
 
     <!-- Kontainer Layar Pesan Utama -->
     <div class="perspective-container">
@@ -342,11 +346,9 @@
         const startBtn = document.getElementById('start-btn');
         const welcomeContainer = document.getElementById('welcome-container');
         const welcomeScreen = document.getElementById('welcome-screen');
-        const welcomeGlare = document.getElementById('welcome-glare');
         const canvasHeart = document.getElementById('heart');
         const canvasFalling = document.getElementById('falling-hearts');
         const messageCard = document.getElementById('message-card');
-        const cardGlare = document.getElementById('card-glare');
         const closeBtn = document.getElementById('close-btn');
         const loadingText = document.getElementById('loading-text');
         
@@ -354,7 +356,7 @@
         const ctxFalling = canvasFalling.getContext('2d');
 
         let animationHeartId, animationFallingId;
-        let activeTarget = welcomeScreen; // Melacak kartu mana yang sedang aktif merespon sentuhan jari
+        let activeTarget = welcomeScreen; 
         const words = ["Laila", "sayanggg", "cantikk", "My Love", "Beautiful", "Forever", "❤️", "Mine", "Precious", "Always", "With You", "Heart"];
 
         function resizeCanvases() {
@@ -371,7 +373,7 @@
             return { x: x * scale, y: y * scale };
         }
 
-        // --- SISTEM DRAW PARTIKEL ---
+        // --- SISTEM PARTIKEL ---
         class HeartParticle {
             constructor(canvasWidth, canvasHeight, index, total) { this.reset(canvasWidth, canvasHeight, index, total); }
             reset(canvasWidth, canvasHeight, index, total) {
@@ -453,7 +455,7 @@
             animationFallingId = requestAnimationFrame(animateFalling);
         }
 
-        // --- ENGINE GENERATOR PARALLAX 3D (TILT & GLARE) ---
+        // --- INTERAKSI PARALLAX 3D TILT GLOBAL ---
         function handleGlobalTilt(e) {
             if (!activeTarget) return;
 
@@ -470,7 +472,6 @@
             activeTarget.style.setProperty('--rx', `${rotateX}deg`);
             activeTarget.style.setProperty('--ry', `${rotateY}deg`);
             
-            // Pengaturan glare dinamis sesuai target kartu yang aktif
             const glareElement = activeTarget.querySelector('.glare');
             if (glareElement) {
                 glareElement.style.opacity = '1';
@@ -479,7 +480,6 @@
                 glareElement.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 65%)`;
             }
             
-            // Berikan penambahan kedalaman Z ekstra saat disentuh/digerakkan jari
             activeTarget.style.setProperty('--tz', '6px');
             if(activeTarget === messageCard) {
                 activeTarget.style.transform = `scale(1.02) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(6px)`;
@@ -500,23 +500,21 @@
             activeTarget.style.transform = `scale(1) rotateX(0deg) rotateY(0deg) translateZ(0px)`;
         }
 
-        // Jalankan event listener 3D global sejak awal muat untuk Welcome Screen
         window.addEventListener('mousemove', handleGlobalTilt);
         window.addEventListener('mouseleave', resetGlobalTilt);
         window.addEventListener('touchmove', handleGlobalTilt, { passive: true });
         window.addEventListener('touchend', resetGlobalTilt);
 
-        // --- LOGIKA ALUR TOMBOL ---
+        // --- LOGIKA ALUR ---
         startBtn.addEventListener('click', () => {
-            // Matikan respon kontrol 3D pada halaman awal, jalankan efek keluar
             activeTarget = null;
             welcomeScreen.style.opacity = '0';
             welcomeScreen.style.transform = 'scale(0.85) translateZ(-80px)';
             
             setTimeout(() => {
                 welcomeContainer.classList.add('hidden');
-                // Munculkan teks transisi penarik perhatian
-                loadingText.style.opacity = '1';
+                // Teks transisi muncul di bawah dengan cantik
+                loadingText.style.opacity = '0.95';
             }, 800);
 
             canvasHeart.style.display = 'block';
@@ -527,12 +525,13 @@
             animateHeart();
             animateFalling();
 
-            // Sembunyikan status teks transisi tepat sebelum kartu utama muncul
+            // Sembunyikan teks tepat sebelum kartu pesan utama terbuka
             setTimeout(() => {
                 loadingText.style.opacity = '0';
+                loadingText.style.transform = 'scale(0.9) translateY(10px)';
             }, 4300);
 
-            // Munculkan Kartu Ucapan Utama
+            // Tampilkan Kartu Utama
             setTimeout(() => {
                 loadingText.classList.add('hidden');
                 messageCard.classList.remove('hidden');
@@ -541,7 +540,6 @@
                     messageCard.classList.add('show');
                     setTimeout(() => {
                         messageCard.classList.add('alive-flow');
-                        // Alihkan kontrol respons jari 3D ke kartu pesan utama
                         activeTarget = messageCard;
                     }, 800);
                 }, 100);
