@@ -31,6 +31,7 @@
             justify-content: center;
             align-items: center;
             transition: opacity 0.6s ease;
+            pointer-events: none; /* Supaya tidak menghalangi klik setelah hilang */
         }
         .spinner {
             width: 40px;
@@ -52,9 +53,11 @@
             align-items: center;
             width: 100%;
             height: 100%;
+            pointer-events: none; /* KUNCI PERBAIKAN: Supaya area kosong tidak memblokir klik */
         }
+        
         #welcome-box {
-            background: rgba(15, 5, 8, 0.75);
+            background: rgba(15, 5, 8, 0.85);
             padding: 40px 30px;
             border-radius: 28px;
             text-align: center;
@@ -62,9 +65,11 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.1);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 77, 109, 0.15);
+            border: 1px solid rgba(255, 77, 109, 0.2);
             transition: all 0.6s ease;
+            pointer-events: auto; /* Mengizinkan klik khusus pada kotak ini */
         }
+        
         h1 {
             font-size: 1.35rem;
             letter-spacing: 2px;
@@ -72,6 +77,7 @@
             margin-bottom: 25px;
             font-weight: 400;
         }
+        
         #start-btn {
             background: linear-gradient(135deg, #ff4d6d, #c9184a);
             color: white;
@@ -83,9 +89,10 @@
             border-radius: 50px;
             letter-spacing: 1px;
             box-shadow: 0 8px 20px rgba(201, 24, 74, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.1s, box-shadow 0.2s;
+            pointer-events: auto; /* Memastikan tombol mutlak bisa diklik */
         }
-        #start-btn:active { transform: scale(0.96); }
+        #start-btn:active { transform: scale(0.95); }
 
         /* --- ELEMENT INTERAKTIF UTAMA --- */
         canvas {
@@ -108,6 +115,7 @@
             height: 100%;
             z-index: 3;
             display: none;
+            pointer-events: none;
         }
         .rose-stem {
             position: absolute;
@@ -161,19 +169,20 @@
 
         /* --- KARTU PESAN ELEGAN --- */
         #message-card {
-            background: linear-gradient(135deg, rgba(20, 6, 10, 0.95) 0%, rgba(10, 2, 4, 0.98) 100%);
+            background: linear-gradient(135deg, rgba(20, 6, 10, 0.96) 0%, rgba(10, 2, 4, 0.98) 100%);
             padding: 30px 25px;
             border-radius: 24px;
-            max-width: 330px;
+            max-width: 340px;
             width: 85%;
             box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255, 77, 109, 0.15);
-            border: 1px solid rgba(255, 77, 109, 0.2);
+            border: 1px solid rgba(255, 77, 109, 0.25);
             opacity: 0;
             transform: scale(0.9) translateY(20px);
             transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
             z-index: 90;
             display: none;
             box-sizing: border-box;
+            pointer-events: auto; /* Mengizinkan interaksi teks */
         }
         #message-card.show {
             opacity: 1;
@@ -264,10 +273,10 @@
     </div>
 
     <script>
-        // Deklarasi Elemen & Canvas
         const startBtn = document.getElementById('start-btn');
         const bgMusic = document.getElementById('bg-music');
         const welcomeLayer = document.getElementById('welcome-layer');
+        const welcomeBox = document.getElementById('welcome-box');
         const roseGarden = document.getElementById('rose-garden');
         const messageCard = document.getElementById('message-card');
         const canvasBg = document.getElementById('canvas-bg');
@@ -292,10 +301,9 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // 1. MEMBUAT KEPALA MAWAR REALISTIS DENGAN UKURAN DAN DERAS KELOPAK TERATUR
+        // 1. MEMBUAT KEPALA MAWAR REALISTIS DENGAN LAPISAN KELOPAK
         function buildRose(containerId) {
             const container = document.getElementById(containerId);
-            // Skema struktur lapisan kelopak: ukuran mengecil ke dalam, rotasi tersebar seimbang
             const petalLayers = [
                 { count: 9, size: 60, scale: 1.0, delay: 0 },
                 { count: 8, size: 48, scale: 0.8, delay: 0.3 },
@@ -365,9 +373,9 @@
                 const coord = getHeartCoordinate(t, scaleFactor);
                 
                 this.x = canvasHeart.width / 2 + coord.x;
-                this.y = canvasHeart.height / 2 + coord.y - 50; // Diangkat agar proporsional di atas mawar
+                this.y = canvasHeart.height / 2 + coord.y - 50;
                 this.word = words[index % words.length];
-                this.alpha = Math.random() * 0.25 + 0.45; // Transparansi halus agar teks tidak merusak pemandangan
+                this.alpha = Math.random() * 0.20 + 0.40;
                 this.fontSize = isMobile ? '10px' : '13px';
             }
             draw() {
@@ -382,7 +390,7 @@
         const heartTexts = [];
         function initHeart() {
             heartTexts.length = 0;
-            const totalWords = 75; // Dikurangi jumlahnya agar teks menyebar bersih dan tidak menumpuk tabrakan
+            const totalWords = 70; // Dikurangi agar super bersih dan tidak padat merayap
             for (let i = 0; i < totalWords; i++) {
                 const t = (i / totalWords) * Math.PI * 2;
                 heartTexts.push(new HeartText(t, i, totalWords));
@@ -394,35 +402,41 @@
             heartTexts.forEach(t => t.draw());
         }
 
-        // ACTION BUTTON: PENGGERAK UTAMA SAAT DIKLIK
-        startBtn.addEventListener('click', () => {
-            // Putar audio
+        // PENGGERAK UTAMA SAAT KLIK (SUDAH AMAN & AKTIF)
+        startBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Mencegah glitch pada event bubbling
+
+            // Musik menyala
             bgMusic.muted = false;
             bgMusic.play().catch(() => {});
 
-            // Transisi hilangkan kotak welcome
-            welcomeLayer.style.opacity = '0';
-            setTimeout(() => welcomeLayer.classList.add('hidden'), 600);
+            // Animasi hilangkan kotak depan
+            welcomeBox.style.opacity = '0';
+            welcomeBox.style.transform = 'scale(0.9) translateY(-10px)';
+            
+            setTimeout(() => {
+                welcomeLayer.classList.add('hidden');
+            }, 600);
 
-            // Munculkan bentuk hati teks
+            // Tampilkan siluet hati teks
             initHeart();
             drawHeartLayer();
             canvasHeart.style.display = 'block';
             setTimeout(() => canvasHeart.style.opacity = '1', 100);
 
-            // Tumbuhkan Kebun Mawar
+            // Tumbuhkan buket mawar
             roseGarden.style.display = 'block';
             setTimeout(() => {
                 document.getElementById('stem-left').classList.add('grow');
                 document.getElementById('stem-center').classList.add('grow');
                 document.getElementById('stem-right').classList.add('grow');
-            }, 300);
+            }, 200);
 
-            // Munculkan Kartu Pesan Terakhir secara Halus
+            // Munculkan kartu surat cinta
             setTimeout(() => {
                 messageCard.style.display = 'block';
-                setTimeout(() => messageCard.classList.add('show'), 100);
-            }, 4000);
+                setTimeout(() => messageCard.classList.add('show'), 50);
+            }, 3800);
         });
     </script>
 </body>
