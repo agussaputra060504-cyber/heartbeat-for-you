@@ -34,14 +34,24 @@
             transform-style: preserve-3d;
         }
 
-        /* Welcome Screen */
+        /* Welcome Screen Container (Memegang kartu & teks melingkarnya sekaligus) */
+        #welcome-screen-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+            pointer-events: auto;
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* Welcome Screen Card */
         #welcome-screen {
             background: linear-gradient(135deg, rgba(35, 6, 15, 0.9) 0%, rgba(15, 2, 5, 0.95) 100%);
             padding: 35px 24px;
             border-radius: 24px;
             text-align: center;
-            width: 80%;
-            max-width: 320px;
+            width: 280px; /* Dikunci agar presisi dengan lingkaran teks */
             box-shadow: 
                 0 30px 60px rgba(0, 0, 0, 0.85), 
                 0 0 40px rgba(255, 30, 60, 0.15),
@@ -50,8 +60,7 @@
             -webkit-backdrop-filter: blur(20px);
             position: relative;
             transform-style: preserve-3d;
-            pointer-events: auto;
-            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: 5;
         }
 
         #welcome-screen::before, #message-card::before {
@@ -120,7 +129,6 @@
             box-shadow: 0 10px 25px rgba(217, 4, 41, 0.4);
             transition: all 0.3s ease;
             transform: translateZ(35px);
-            pointer-events: auto;
         }
 
         #start-btn:active {
@@ -128,34 +136,42 @@
             box-shadow: 0 5px 10px rgba(217, 4, 41, 0.4);
         }
 
-        /* BARU: Teks Transisi Menunggu yang Memenuhi Lebar Layar */
-        #loading-text {
+        /* BARU: Efek Teks Memutari/Mengitari Kartu dari Awal */
+        .circular-text-container {
             position: absolute;
-            bottom: 8%; /* Diturunkan sedikit agar aman dari jangkauan kartu saat miring */
-            left: 0;
-            width: 100%; /* Memenuhi seluruh lebar layar */
-            z-index: 4;
-            color: #ff85a1;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.85rem; 
-            letter-spacing: 4px; /* Renggang cinematic agar memenuhi ruang kosong horizontal */
-            font-weight: bold;
-            text-align: center;
-            line-height: 1.5;
-            text-shadow: 0 0 15px rgba(255, 133, 161, 0.6);
-            opacity: 0;
-            transform: scale(0.95) translateZ(15px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            width: 480px; /* Diameter bentangan lingkaran luar */
+            height: 480px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
             pointer-events: none;
-            box-sizing: border-box;
-            padding: 0 20px;
-        }
-        
-        .pulse-glow {
-            animation: breathGlow 2s ease-in-out infinite alternate;
+            transform: translateZ(10px);
+            animation: rotateText 25s linear infinite; /* Berputar perlahan secara estetik */
         }
 
-        /* Canvases */
+        .circular-text-container span {
+            position: absolute;
+            left: 50%;
+            transform-origin: 0 240px; /* Jari-jari lingkaran luar */
+            color: #ff85a1;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 133, 161, 0.5);
+            /* Mengatur rotasi tiap huruf secara dinamis berdasarkan indeks CSS */
+            transform: rotate(calc(var(--i) * (360deg / var(--total-chars))));
+        }
+
+        @keyframes rotateText {
+            0% { transform: translateZ(10px) rotate(0deg); }
+            100% { transform: translateZ(10px) rotate(360deg); }
+        }
+
+        /* Canvases untuk Fase Dua */
         canvas {
             position: absolute;
             top: 0;
@@ -293,19 +309,15 @@
             100% { transform: translateZ(40px) scale(1); }
         }
 
-        @keyframes breathGlow {
-            0% { transform: scale(0.97) translateZ(15px); opacity: 0.45; text-shadow: 0 0 4px rgba(255, 133, 161, 0.3); }
-            100% { transform: scale(1.01) translateZ(15px); opacity: 0.95; text-shadow: 0 0 15px rgba(255, 133, 161, 0.7); }
-        }
-
-        @media (max-height: 667px) {
-            #welcome-screen { padding: 25px 20px; }
-            #message-card { padding: 20px 18px; width: 90%; }
-            .message { font-size: 0.82rem; line-height: 1.55; }
-            .recipient { font-size: 1.15rem; }
-            .card-divider { margin-bottom: 12px; }
-            .signature { margin-top: 14px; }
-            #loading-text { bottom: 6%; font-size: 0.75rem; letter-spacing: 3px; }
+        @media (max-width: 600px) {
+            .circular-text-container {
+                width: 380px;
+                height: 380px;
+            }
+            .circular-text-container span {
+                transform-origin: 0 190px;
+                font-size: 0.68rem;
+            }
         }
     </style>
 </head>
@@ -313,20 +325,25 @@
 
     <!-- Kontainer Layar Awal (Welcome Screen) -->
     <div class="perspective-container" id="welcome-container">
-        <div id="welcome-screen" class="alive-flow">
-            <div class="glare" id="welcome-glare"></div>
-            <div class="heart-icon">❤️</div>
-            <h1>special-for-laila</h1>
-            <p id="status">TAP TO OPEN MY HONEST FEELINGS...</p>
-            <button id="start-btn">BUKA SEKARANG</button>
+        <div id="welcome-screen-wrapper" class="alive-flow">
+            
+            <!-- Elemen Teks Melingkar Mengitari Kartu Utuh -->
+            <div class="circular-text-container" id="circle-text"></div>
+            
+            <!-- Kartu Utama -->
+            <div id="welcome-screen">
+                <div class="glare" id="welcome-glare"></div>
+                <div class="heart-icon">❤️</div>
+                <h1>special-for-laila</h1>
+                <p id="status">TAP TO OPEN MY HONEST FEELINGS...</p>
+                <button id="start-btn">BUKA SEKARANG</button>
+            </div>
+
         </div>
     </div>
 
     <canvas id="heart"></canvas>
     <canvas id="falling-hearts"></canvas>
-    
-    <!-- Teks Transisi Menunggu di Bawah Layar -->
-    <div id="loading-text" class="pulse-glow">Pouring my heart into pixels, wait a second...</div>
 
     <!-- Kontainer Layar Pesan Utama -->
     <div class="perspective-container">
@@ -346,20 +363,35 @@
     </div>
 
     <script>
+        // --- GENERATOR TEKS MELINGKAR OTOMATIS ---
+        const rawText = "Pouring my heart into pixels, wait a second... special for laila • ";
+        // Menduplikasi teks agar melingkar penuh menutupi area sekeliling kartu
+        const fullCircleText = rawText.repeat(2); 
+        const circleContainer = document.getElementById('circle-text');
+        
+        circleContainer.style.setProperty('--total-chars', fullCircleText.length);
+        
+        fullCircleText.split("").forEach((char, index) => {
+            const span = document.createElement('span');
+            span.innerText = char === " " ? "\u00A0" : char; // Mengatasi spasi kosong HTML
+            span.style.setProperty('--i', index);
+            circleContainer.appendChild(span);
+        });
+
+        // --- DEKLARASI HATI UTAMA ---
         const startBtn = document.getElementById('start-btn');
         const welcomeContainer = document.getElementById('welcome-container');
-        const welcomeScreen = document.getElementById('welcome-screen');
+        const welcomeWrapper = document.getElementById('welcome-screen-wrapper');
         const canvasHeart = document.getElementById('heart');
         const canvasFalling = document.getElementById('falling-hearts');
         const messageCard = document.getElementById('message-card');
         const closeBtn = document.getElementById('close-btn');
-        const loadingText = document.getElementById('loading-text');
         
         const ctxHeart = canvasHeart.getContext('2d');
         const ctxFalling = canvasFalling.getContext('2d');
 
         let animationHeartId, animationFallingId;
-        let activeTarget = welcomeScreen; 
+        let activeTarget = welcomeWrapper; 
         const words = ["Laila", "sayanggg", "cantikk", "My Love", "Beautiful", "Forever", "❤️", "Mine", "Precious", "Always", "With You", "Heart"];
 
         function resizeCanvases() {
@@ -376,7 +408,7 @@
             return { x: x * scale, y: y * scale };
         }
 
-        // --- SISTEM PARTIKEL ---
+        // --- PARTIKEL UNTUK FASE DUA ---
         class HeartParticle {
             constructor(canvasWidth, canvasHeight, index, total) { this.reset(canvasWidth, canvasHeight, index, total); }
             reset(canvasWidth, canvasHeight, index, total) {
@@ -458,7 +490,7 @@
             animationFallingId = requestAnimationFrame(animateFalling);
         }
 
-        // --- INTERAKSI PARALLAX 3D TILT GLOBAL ---
+        // --- PARALLAX 3D TILT EFFECT ---
         function handleGlobalTilt(e) {
             if (!activeTarget) return;
 
@@ -508,16 +540,14 @@
         window.addEventListener('touchmove', handleGlobalTilt, { passive: true });
         window.addEventListener('touchend', resetGlobalTilt);
 
-        // --- LOGIKA ALUR ---
+        // --- SISTEM PEMINDAHAN Halaman ---
         startBtn.addEventListener('click', () => {
             activeTarget = null;
-            welcomeScreen.style.opacity = '0';
-            welcomeScreen.style.transform = 'scale(0.85) translateZ(-80px)';
+            welcomeWrapper.style.opacity = '0';
+            welcomeWrapper.style.transform = 'scale(0.85) translateZ(-80px)';
             
             setTimeout(() => {
                 welcomeContainer.classList.add('hidden');
-                // Teks transisi muncul membentang indah
-                loadingText.style.opacity = '0.95';
             }, 800);
 
             canvasHeart.style.display = 'block';
@@ -528,17 +558,9 @@
             animateHeart();
             animateFalling();
 
-            // Sembunyikan teks tepat sebelum kartu pesan utama terbuka
+            // Tampilkan kartu pesan utama
             setTimeout(() => {
-                loadingText.style.opacity = '0';
-                loadingText.style.transform = 'scale(0.95) translateY(10px)';
-            }, 4300);
-
-            // Tampilkan Kartu Utama
-            setTimeout(() => {
-                loadingText.classList.add('hidden');
                 messageCard.classList.remove('hidden');
-                
                 setTimeout(() => {
                     messageCard.classList.add('show');
                     setTimeout(() => {
