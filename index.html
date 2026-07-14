@@ -136,40 +136,6 @@
             box-shadow: 0 5px 10px rgba(217, 4, 41, 0.4);
         }
 
-        /* PERBAIKAN: Kontainer Teks Melingkar diperbesar agar posisinya mutlak di LUAR kotak kartu */
-        .circular-text-container {
-            position: absolute;
-            width: 580px; /* Diperlebar diameter lingkarannya */
-            height: 580px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2;
-            pointer-events: none;
-            transform: translateZ(10px);
-            animation: rotateText 30s linear infinite; 
-        }
-
-        .circular-text-container span {
-            position: absolute;
-            left: 50%;
-            transform-origin: 0 290px; /* Radius ditarik keluar (580px / 2) agar bersih di luar kotak */
-            color: #ff85a1;
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255, 133, 161, 0.5);
-            transform: rotate(calc(var(--i) * (360deg / var(--total-chars))));
-        }
-
-        @keyframes rotateText {
-            0% { transform: translateZ(10px) rotate(0deg); }
-            100% { transform: translateZ(10px) rotate(360deg); }
-        }
-
         /* Canvases */
         canvas {
             position: absolute;
@@ -177,8 +143,9 @@
             width: 100%; height: 100%;
         }
         
-        #heart { z-index: 1; display: none; }
-        #falling-hearts { z-index: 2; display: none; pointer-events: none; }
+        #initial-rain { z-index: 1; } /* Canvas untuk teks hujan fase awal */
+        #heart { z-index: 2; display: none; }
+        #falling-hearts { z-index: 3; display: none; pointer-events: none; }
 
         /* Message Card */
         #message-card {
@@ -304,27 +271,21 @@
             50% { transform: translateZ(45px) scale(1.08); }
             100% { transform: translateZ(40px) scale(1); }
         }
-
-        /* Responsif untuk Mobile Layar Kecil */
-        @media (max-width: 600px) {
-            .circular-text-container { width: 440px; height: 440px; }
-            .circular-text-container span { transform-origin: 0 220px; font-size: 0.72rem; }
-        }
     </style>
 </head>
 <body>
 
-    <!-- Taruh Link File Musik (.mp3) di sini -->
-    <audio id="bg-music" loop>
-    <source src="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3" type="audio/mpeg">
-</audio>
+    <!-- Audio Player -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Canvas Fase Awal: Teks Hujan Berjatuhan -->
+    <canvas id="initial-rain"></canvas>
 
     <!-- Kontainer Layar Awal -->
     <div class="perspective-container" id="welcome-container">
         <div id="welcome-screen-wrapper" class="alive-flow">
-            
-            <!-- Elemen Teks Melingkar Lintasan Luar Kotak -->
-            <div class="circular-text-container" id="circle-text"></div>
             
             <!-- Kartu Utama -->
             <div id="welcome-screen">
@@ -338,6 +299,7 @@
         </div>
     </div>
 
+    <!-- Canvas Fase Dua -->
     <canvas id="heart"></canvas>
     <canvas id="falling-hearts"></canvas>
 
@@ -359,52 +321,77 @@
     </div>
 
     <script>
-        // --- GENERATOR TEKS MELINGKAR DI LUAR KOTAK ---
-        const rawText = "Pouring my heart into pixels, wait a second... special for laila • ";
-        const fullCircleText = rawText.repeat(2); 
-        const circleContainer = document.getElementById('circle-text');
-        
-        circleContainer.style.setProperty('--total-chars', fullCircleText.length);
-        
-        fullCircleText.split("").forEach((char, index) => {
-            const span = document.createElement('span');
-            span.innerText = char === " " ? "\u00A0" : char;
-            span.style.setProperty('--i', index);
-            circleContainer.appendChild(span);
-        });
-
         // --- DEKLARASI ELEMEN ---
         const startBtn = document.getElementById('start-btn');
         const bgMusic = document.getElementById('bg-music');
         const welcomeContainer = document.getElementById('welcome-container');
         const welcomeWrapper = document.getElementById('welcome-screen-wrapper');
+        const canvasRain = document.getElementById('initial-rain');
         const canvasHeart = document.getElementById('heart');
         const canvasFalling = document.getElementById('falling-hearts');
         const messageCard = document.getElementById('message-card');
         const closeBtn = document.getElementById('close-btn');
         
+        const ctxRain = canvasRain.getContext('2d');
         const ctxHeart = canvasHeart.getContext('2d');
         const ctxFalling = canvasFalling.getContext('2d');
 
-        let animationHeartId, animationFallingId;
+        let animationRainId, animationHeartId, animationFallingId;
         let activeTarget = welcomeWrapper; 
+        
         const words = ["Laila", "sayanggg", "cantikk", "My Love", "Beautiful", "Forever", "❤️", "Mine", "Precious", "Always", "With You", "Heart"];
+        const rainWords = ["Special For Laila", "Pouring my heart into pixels", "Laila", "❤️", "Beautiful", "My Love", "Putra & Laila"];
 
         function resizeCanvases() {
+            canvasRain.width = window.innerWidth;
+            canvasRain.height = window.innerHeight;
             canvasHeart.width = window.innerWidth;
             canvasHeart.height = window.innerHeight;
             canvasFalling.width = window.innerWidth;
             canvasFalling.height = window.innerHeight;
         }
         window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
 
+        // --- FASE 1: SISTEM TEKS HUJAN BERJATUHAN ---
+        class RainText {
+            constructor() { this.reset(); this.y = Math.random() * canvasRain.height; }
+            reset() {
+                this.x = Math.random() * canvasRain.width;
+                this.y = -40;
+                this.word = rainWords[Math.floor(Math.random() * rainWords.length)];
+                this.speed = Math.random() * 1.5 + 0.8;
+                this.opacity = Math.random() * 0.25 + 0.15; // Dibuat soft agar tidak menutupi kartu
+                this.size = Math.random() * 4 + 11;
+            }
+            update() {
+                this.y += this.speed;
+                if (this.y > canvasRain.height + 40) this.reset();
+            }
+            draw() {
+                ctxRain.fillStyle = `rgba(255, 133, 161, ${this.opacity})`;
+                ctxRain.font = `italic bold ${this.size}px 'Courier New', monospace`;
+                ctxRain.fillText(this.word, this.x, this.y);
+            }
+        }
+
+        const rainParticles = [];
+        for(let i = 0; i < 40; i++) rainParticles.push(new RainText());
+
+        function animateRain() {
+            ctxRain.clearRect(0, 0, canvasRain.width, canvasRain.height);
+            rainParticles.forEach(p => { p.update(); p.draw(); });
+            animationRainId = requestAnimationFrame(animateRain);
+        }
+        animateRain(); // Langsung jalan di awal loading
+
+        // --- FASE 2: MODEL HATI & ELEMEN TRANSISI ---
         function getHeartPoint(t, scale) {
             const x = 16 * Math.pow(Math.sin(t), 3);
             const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
             return { x: x * scale, y: y * scale };
         }
 
-        // --- PARTIKEL BENTUK HATI FASE KEDUA ---
         class HeartParticle {
             constructor(canvasWidth, canvasHeight, index, total) { this.reset(canvasWidth, canvasHeight, index, total); }
             reset(canvasWidth, canvasHeight, index, total) {
@@ -535,16 +522,30 @@
         window.addEventListener('touchmove', handleGlobalTilt, { passive: true });
         window.addEventListener('touchend', resetGlobalTilt);
 
-        // --- CLIK AKSI & PLAY LAGU ---
+        // --- KLIK AKSI & PERBAIKAN PLAY LAGU MANDATORI ---
         startBtn.addEventListener('click', () => {
-            bgMusic.play().catch(error => {
-                console.log("Audio play diblokir oleh browser:", error);
-            });
+            // Memaksa browser memutar musik secara sinkron lewat interaksi fisik
+            bgMusic.volume = 1.0;
+            const playPromise = bgMusic.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log("Musik berhasil diputar!");
+                }).catch(error => {
+                    console.log("Playback gagal, mencoba alternatif play:", error);
+                    // Cara alternatif jika device tertentu memblokir instan thread
+                    setTimeout(() => { bgMusic.play(); }, 50);
+                });
+            }
 
             activeTarget = null;
             welcomeWrapper.style.opacity = '0';
             welcomeWrapper.style.transform = 'scale(0.85) translateZ(-80px)';
             
+            // Hentikan hujan teks fase awal
+            cancelAnimationFrame(animationRainId);
+            canvasRain.style.display = 'none';
+
             setTimeout(() => {
                 welcomeContainer.classList.add('hidden');
             }, 800);
