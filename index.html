@@ -34,7 +34,7 @@
             transform-style: preserve-3d;
         }
 
-        /* Welcome Screen Container (Memegang kartu & teks melingkarnya sekaligus) */
+        /* Welcome Screen Container */
         #welcome-screen-wrapper {
             position: relative;
             display: flex;
@@ -51,7 +51,7 @@
             padding: 35px 24px;
             border-radius: 24px;
             text-align: center;
-            width: 280px; /* Dikunci agar presisi dengan lingkaran teks */
+            width: 280px;
             box-shadow: 
                 0 30px 60px rgba(0, 0, 0, 0.85), 
                 0 0 40px rgba(255, 30, 60, 0.15),
@@ -136,11 +136,11 @@
             box-shadow: 0 5px 10px rgba(217, 4, 41, 0.4);
         }
 
-        /* BARU: Efek Teks Memutari/Mengitari Kartu dari Awal */
+        /* PERBAIKAN: Kontainer Teks Melingkar diperbesar agar posisinya mutlak di LUAR kotak kartu */
         .circular-text-container {
             position: absolute;
-            width: 480px; /* Diameter bentangan lingkaran luar */
-            height: 480px;
+            width: 580px; /* Diperlebar diameter lingkarannya */
+            height: 580px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -148,21 +148,20 @@
             z-index: 2;
             pointer-events: none;
             transform: translateZ(10px);
-            animation: rotateText 25s linear infinite; /* Berputar perlahan secara estetik */
+            animation: rotateText 30s linear infinite; 
         }
 
         .circular-text-container span {
             position: absolute;
             left: 50%;
-            transform-origin: 0 240px; /* Jari-jari lingkaran luar */
+            transform-origin: 0 290px; /* Radius ditarik keluar (580px / 2) agar bersih di luar kotak */
             color: #ff85a1;
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             text-shadow: 0 0 10px rgba(255, 133, 161, 0.5);
-            /* Mengatur rotasi tiap huruf secara dinamis berdasarkan indeks CSS */
             transform: rotate(calc(var(--i) * (360deg / var(--total-chars))));
         }
 
@@ -171,13 +170,11 @@
             100% { transform: translateZ(10px) rotate(360deg); }
         }
 
-        /* Canvases untuk Fase Dua */
+        /* Canvases */
         canvas {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
         }
         
         #heart { z-index: 1; display: none; }
@@ -302,32 +299,31 @@
             transform: translateZ(35px);
         }
 
-        /* Kumpulan Keyframes CSS */
         @keyframes heartPulse {
             0% { transform: translateZ(40px) scale(1); }
             50% { transform: translateZ(45px) scale(1.08); }
             100% { transform: translateZ(40px) scale(1); }
         }
 
+        /* Responsif untuk Mobile Layar Kecil */
         @media (max-width: 600px) {
-            .circular-text-container {
-                width: 380px;
-                height: 380px;
-            }
-            .circular-text-container span {
-                transform-origin: 0 190px;
-                font-size: 0.68rem;
-            }
+            .circular-text-container { width: 440px; height: 440px; }
+            .circular-text-container span { transform-origin: 0 220px; font-size: 0.72rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Kontainer Layar Awal (Welcome Screen) -->
+    <!-- Taruh Link File Musik (.mp3) di sini -->
+    <audio id="bg-music" loop>
+    <source src="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3" type="audio/mpeg">
+</audio>
+
+    <!-- Kontainer Layar Awal -->
     <div class="perspective-container" id="welcome-container">
         <div id="welcome-screen-wrapper" class="alive-flow">
             
-            <!-- Elemen Teks Melingkar Mengitari Kartu Utuh -->
+            <!-- Elemen Teks Melingkar Lintasan Luar Kotak -->
             <div class="circular-text-container" id="circle-text"></div>
             
             <!-- Kartu Utama -->
@@ -363,9 +359,8 @@
     </div>
 
     <script>
-        // --- GENERATOR TEKS MELINGKAR OTOMATIS ---
+        // --- GENERATOR TEKS MELINGKAR DI LUAR KOTAK ---
         const rawText = "Pouring my heart into pixels, wait a second... special for laila • ";
-        // Menduplikasi teks agar melingkar penuh menutupi area sekeliling kartu
         const fullCircleText = rawText.repeat(2); 
         const circleContainer = document.getElementById('circle-text');
         
@@ -373,13 +368,14 @@
         
         fullCircleText.split("").forEach((char, index) => {
             const span = document.createElement('span');
-            span.innerText = char === " " ? "\u00A0" : char; // Mengatasi spasi kosong HTML
+            span.innerText = char === " " ? "\u00A0" : char;
             span.style.setProperty('--i', index);
             circleContainer.appendChild(span);
         });
 
-        // --- DEKLARASI HATI UTAMA ---
+        // --- DEKLARASI ELEMEN ---
         const startBtn = document.getElementById('start-btn');
+        const bgMusic = document.getElementById('bg-music');
         const welcomeContainer = document.getElementById('welcome-container');
         const welcomeWrapper = document.getElementById('welcome-screen-wrapper');
         const canvasHeart = document.getElementById('heart');
@@ -408,7 +404,7 @@
             return { x: x * scale, y: y * scale };
         }
 
-        // --- PARTIKEL UNTUK FASE DUA ---
+        // --- PARTIKEL BENTUK HATI FASE KEDUA ---
         class HeartParticle {
             constructor(canvasWidth, canvasHeight, index, total) { this.reset(canvasWidth, canvasHeight, index, total); }
             reset(canvasWidth, canvasHeight, index, total) {
@@ -490,10 +486,9 @@
             animationFallingId = requestAnimationFrame(animateFalling);
         }
 
-        // --- PARALLAX 3D TILT EFFECT ---
+        // --- INTERAKSI TILT 3D PARALLAX ---
         function handleGlobalTilt(e) {
             if (!activeTarget) return;
-
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
@@ -540,8 +535,12 @@
         window.addEventListener('touchmove', handleGlobalTilt, { passive: true });
         window.addEventListener('touchend', resetGlobalTilt);
 
-        // --- SISTEM PEMINDAHAN Halaman ---
+        // --- CLIK AKSI & PLAY LAGU ---
         startBtn.addEventListener('click', () => {
+            bgMusic.play().catch(error => {
+                console.log("Audio play diblokir oleh browser:", error);
+            });
+
             activeTarget = null;
             welcomeWrapper.style.opacity = '0';
             welcomeWrapper.style.transform = 'scale(0.85) translateZ(-80px)';
@@ -558,7 +557,6 @@
             animateHeart();
             animateFalling();
 
-            // Tampilkan kartu pesan utama
             setTimeout(() => {
                 messageCard.classList.remove('hidden');
                 setTimeout(() => {
@@ -577,6 +575,7 @@
             messageCard.classList.remove('show');
             messageCard.style.transform = 'scale(0.8) translateZ(-100px)';
             setTimeout(() => { messageCard.classList.add('hidden'); }, 1000);
+            bgMusic.pause();
         });
     </script>
 </body>
