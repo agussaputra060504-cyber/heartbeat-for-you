@@ -165,15 +165,15 @@
         #garden-container { z-index: 8; display: none; }
         #falling-hearts { z-index: 3; display: none; pointer-events: none; }
 
-        /* --- KEBUN MAWAR ANIMASI BERLAPIS DAN DINAMIS --- */
+        /* --- MAWAR TUNGGAL DI TENGAH HATI --- */
         #garden-container {
             position: absolute;
-            bottom: 0;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             width: 100%;
             max-width: 450px;
-            height: 520px;
+            height: 450px;
             pointer-events: none;
         }
         
@@ -215,7 +215,6 @@
             transform: scale(1) rotate(var(--rot));
         }
         
-        /* Kepala Mawar */
         .flower-head {
             position: absolute;
             left: 50%;
@@ -228,7 +227,6 @@
             transform: translateX(-50%) scale(1);
         }
 
-        /* Kelopak Bunga Dibuat Jauh Lebih Besar & Mekar Luas */
         .petal {
             position: absolute;
             left: 50%;
@@ -242,7 +240,6 @@
             transition: transform 3s cubic-bezier(0.1, 0.8, 0.2, 1), opacity 2.5s ease;
         }
 
-        /* Saat bunga tumbuh, picu mekar besar */
         .flower-stem.grow .petal {
             opacity: 0.98;
             transform: translate(-50%, -100%) scale(var(--sc)) rotate(var(--rt));
@@ -308,7 +305,6 @@
 
         #close-btn:hover { color: #ef233c; }
 
-        <h2>Just For You</h2>
         .recipient {
             font-weight: 700;
             font-size: 1.25rem;
@@ -393,25 +389,13 @@
     <canvas id="heart"></canvas>
     <canvas id="falling-hearts"></canvas>
 
-    <!-- WADAH UTAMA KEBUN 3 TANGKAI MAWAR MERAH (TANGKAI PENDEK & NAIK KE ATAS) -->
-    <div id="garden-container" style="height: 520px;">
-        <!-- Tangkai Tengah (Naik paling tinggi di tengah hati) -->
-        <div class="flower-stem" id="stem1" style="left: 50%; height: 160px; bottom: 180px; transition-delay: 0.2s;">
-            <div class="leaf left" style="top: 70px; --rot: -25deg;"></div>
-            <div class="leaf right" style="top: 40px; --rot: 25deg;"></div>
+    <!-- WADAH UTAMA SATU MAWAR DI TENGAH -->
+    <div id="garden-container">
+        <!-- Hanya 1 Mawar diposisikan presisi di tengah-bawah area hati tanpa tabrakan -->
+        <div class="flower-stem" id="stem1" style="left: 50%; height: 90px; bottom: 130px; transition-delay: 0.2s;">
+            <div class="leaf left" style="top: 45px; --rot: -25deg;"></div>
+            <div class="leaf right" style="top: 25px; --rot: 25deg;"></div>
             <div class="flower-head" id="head1" style="width: 80px; height: 80px; top: -20px;"></div>
-        </div>
-        
-        <!-- Tangkai Kiri -->
-        <div class="flower-stem" id="stem2" style="left: 20%; height: 130px; bottom: 130px; transition-delay: 0.5s;">
-            <div class="leaf left" style="top: 50px; --rot: -30deg;"></div>
-            <div class="flower-head" id="head2" style="width: 80px; height: 80px; top: -20px; transition-delay: 2.5s;"></div>
-        </div>
-        
-        <!-- Tangkai Kanan -->
-        <div class="flower-stem" id="stem3" style="left: 80%; height: 140px; bottom: 140px; transition-delay: 0.3s;">
-            <div class="leaf right" style="top: 60px; --rot: 30deg;"></div>
-            <div class="flower-head" id="head3" style="width: 80px; height: 80px; top: -20px; transition-delay: 2.4s;"></div>
         </div>
     </div>
 
@@ -455,15 +439,13 @@
         const rainWords = ["Special For Laila", "Pouring my heart into pixels", "Laila", "❤️", "Beautiful", "My Love"];
         const phrases = ["gathering every proof...", "planning something sweet...", "loading assets...", "almost ready to bloom..."];
 
-        // GENERATOR KELOPAK MAWAR DENGAN UKURAN DIAMETER JAUH LEBIH BESAR
         function createRoseHead(containerId) {
             const container = document.getElementById(containerId);
-            // Mengubah ukuran kelopak (width & height) agar mekar sangat besar dan padat
             const layers = [
-                { count: 9,  width: 75, height: 75, scale: 1.0, zIndex: 1, delayBase: 0.0 }, // Lapisan Luar Sangat Besar
-                { count: 8,  width: 60, height: 60, scale: 0.9, zIndex: 2, delayBase: 0.4 }, // Lapisan Menengah-Luar
-                { count: 6,  width: 45, height: 45, scale: 0.7, zIndex: 3, delayBase: 0.8 }, // Lapisan Menengah-Dalam
-                { count: 5,  width: 30, height: 30, scale: 0.5, zIndex: 4, delayBase: 1.2 }  // Inti Kuncup
+                { count: 9,  width: 75, height: 75, scale: 1.0, zIndex: 1, delayBase: 0.0 },
+                { count: 8,  width: 60, height: 60, scale: 0.9, zIndex: 2, delayBase: 0.4 },
+                { count: 6,  width: 45, height: 45, scale: 0.7, zIndex: 3, delayBase: 0.8 },
+                { count: 5,  width: 30, height: 30, scale: 0.5, zIndex: 4, delayBase: 1.2 } 
             ];
 
             layers.forEach((layer) => {
@@ -491,12 +473,8 @@
             container.appendChild(center);
         }
 
-        // Jalankan pembuatan kepala mawar besar
         createRoseHead('head1');
-        createRoseHead('head2');
-        createRoseHead('head3');
 
-        // LOGIKA LOADING PRELOADER
         window.addEventListener('DOMContentLoaded', () => {
             const bar = document.getElementById('bar');
             const percent = document.getElementById('percent');
@@ -537,7 +515,6 @@
         window.addEventListener('resize', resizeCanvases);
         resizeCanvases();
 
-        // FASE 1: TEXT RAIN
         class RainText {
             constructor() { this.reset(); this.y = Math.random() * canvasRain.height; }
             reset() {
@@ -569,7 +546,6 @@
         }
         animateRain();
 
-        // FASE 2: KALIMAT BENTUK HATI BERDETAK
         function getHeartPoint(t, scale) {
             const x = 16 * Math.pow(Math.sin(t), 3);
             const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
@@ -657,7 +633,6 @@
             animationFallingId = requestAnimationFrame(animateFalling);
         }
 
-        // PARALLAX 3D TILT EFFECT
         function handleGlobalTilt(e) {
             if (!activeTarget) return;
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -688,7 +663,6 @@
         window.addEventListener('touchmove', handleGlobalTilt, { passive: true });
         window.addEventListener('touchend', resetGlobalTilt);
 
-        // KLIK TOMBOL BUKA SEKARANG
         startBtn.addEventListener('click', () => {
             bgMusic.muted = false;
             bgMusic.volume = 1.0;
@@ -712,14 +686,10 @@
             animateHeart();
             animateFalling();
 
-            // Pemicu pertumbuhan 3 tangkai bunga
             setTimeout(() => {
                 document.getElementById('stem1').classList.add('grow');
-                document.getElementById('stem2').classList.add('grow');
-                document.getElementById('stem3').classList.add('grow');
             }, 300);
 
-            // Tampilkan kartu pesan cinta setelah mawar mekar sempurna (6.5 detik)
             setTimeout(() => {
                 messageCard.classList.remove('hidden');
                 setTimeout(() => {
