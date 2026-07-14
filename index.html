@@ -165,7 +165,7 @@
         #garden-container { z-index: 8; display: none; }
         #falling-hearts { z-index: 3; display: none; pointer-events: none; }
 
-        /* --- WADAH MAWAR TUNGGAL LEBIH KECIL & PRESISI --- */
+        /* --- WADAH MAWAR TUNGGAL LEBIH KECIL & DIBAWAH --- */
         #garden-container {
             position: absolute;
             top: 50%;
@@ -179,7 +179,7 @@
         
         .flower-stem {
             position: absolute;
-            width: 4px; /* Batang dibuat sedikit ramping */
+            width: 3.5px; 
             background: linear-gradient(to top, #0f1c0f, #243d18, #3e5c2b);
             border-radius: 3px;
             transform: scaleY(0);
@@ -191,14 +191,14 @@
             transform: scaleY(1);
         }
 
-        /* Kelopak hijau kecil penyangga mawar di bawah kelopak merah (sepal) */
+        /* Kelopak hijau penyangga */
         .sepal-cup {
             position: absolute;
-            top: -5px;
+            top: -4px;
             left: 50%;
             transform: translateX(-50%);
-            width: 12px;
-            height: 8px;
+            width: 9px;
+            height: 6px;
             background: #243d18;
             border-radius: 0 0 50% 50%;
             z-index: 0;
@@ -206,21 +206,21 @@
 
         .leaf {
             position: absolute;
-            width: 16px;
-            height: 10px;
+            width: 12px;
+            height: 8px;
             background: #243d18;
             opacity: 0;
             transform: scale(0);
             transition: transform 1s ease 1.8s, opacity 1s ease 1.8s;
         }
         .leaf.left {
-            left: -13px;
-            border-radius: 12px 0 12px 0;
+            left: -10px;
+            border-radius: 10px 0 10px 0;
             transform-origin: right bottom;
         }
         .leaf.right {
-            right: -13px;
-            border-radius: 0 12px 0 12px;
+            right: -10px;
+            border-radius: 0 10px 0 10px;
             transform-origin: left bottom;
         }
         .flower-stem.grow .leaf {
@@ -228,7 +228,7 @@
             transform: scale(1) rotate(var(--rot));
         }
         
-        /* Wadah kelopak mawar disesuaikan ukurannya */
+        /* Ukuran wadah bunga disesuaikan dengan mawar mini baru */
         .flower-head {
             position: absolute;
             left: 50%;
@@ -241,14 +241,14 @@
             transform: translateX(-50%) scale(1);
         }
 
-        /* Desain tekstur kelopak mirip foto (gradasi bayangan & lengkungan lembut) */
+        /* Desain kelopak mawar miniatur */
         .petal {
             position: absolute;
             left: 50%;
             top: 50%;
             transform-origin: bottom center;
             background: linear-gradient(135deg, #e60026 0%, #b7001d 40%, #7a0010 85%, #4a0007 100%);
-            box-shadow: inset 1px 2px 5px rgba(255,100,120,0.35), 0px 4px 10px rgba(0,0,0,0.6);
+            box-shadow: inset 0.5px 1px 3px rgba(255,100,120,0.35), 0px 3px 7px rgba(0,0,0,0.6);
             opacity: 0;
             transform: translate(-50%, -100%) scale(0) rotate(0deg);
             transition: transform 3.2s cubic-bezier(0.1, 0.8, 0.25, 1), opacity 2.5s ease;
@@ -259,18 +259,18 @@
             transform: translate(-50%, -100%) scale(var(--sc)) rotate(var(--rt));
         }
 
-        /* Inti bagian terdalam kuncup agar terlihat gelap & padat berulir */
+        /* Inti kuncup spiral pekat */
         .flower-center {
             position: absolute;
             background: linear-gradient(to bottom, #4a0007, #210003);
             border-radius: 50%;
-            width: 8px;
-            height: 8px;
+            width: 5px;
+            height: 5px;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
             z-index: 99;
-            box-shadow: inset 0 0 3px #000;
+            box-shadow: inset 0 0 2px #000;
         }
 
         /* --- LAYAR PESAN UTAMA --- */
@@ -405,14 +405,14 @@
     <canvas id="heart"></canvas>
     <canvas id="falling-hearts"></canvas>
 
-    <!-- WADAH UTAMA SATU MAWAR DI TENGAH -->
+    <!-- WADAH MAWAR: DILONGGARKAN KE BAWAH AGAR TIDAK NABRAK HATI -->
     <div id="garden-container">
-        <!-- Batang diposisikan ideal di tengah bawah rongga dalam hati -->
-        <div class="flower-stem" id="stem1" style="left: 50%; height: 95px; bottom: 155px; transition-delay: 0.2s;">
+        <!-- Tinggi batang diubah ke 65px dan posisi diturunkan ke bottom: 95px -->
+        <div class="flower-stem" id="stem1" style="left: 50%; height: 65px; bottom: 95px; transition-delay: 0.2s;">
             <div class="sepal-cup"></div>
-            <div class="leaf left" style="top: 50px; --rot: -22deg;"></div>
-            <div class="leaf right" style="top: 32px; --rot: 26deg;"></div>
-            <div class="flower-head" id="head1" style="width: 56px; height: 56px; top: -28px;"></div>
+            <div class="leaf left" style="top: 32px; --rot: -22deg;"></div>
+            <div class="leaf right" style="top: 18px; --rot: 26deg;"></div>
+            <div class="flower-head" id="head1" style="width: 36px; height: 36px; top: -18px;"></div>
         </div>
     </div>
 
@@ -456,24 +456,23 @@
         const rainWords = ["Special For Laila", "Pouring my heart into pixels", "Laila", "❤️", "Beautiful", "My Love"];
         const phrases = ["gathering every proof...", "planning something sweet...", "loading assets...", "almost ready to bloom..."];
 
-        // FUNGSI BARU: Membuat struktur mawar spiral padat berlapis mirip foto asli (Mawar Terbuka Sempurna)
+        // FUNGSI UTAMA: Bunga diperkecil 35% dengan formasi spiral kelopak padat melingkar
         function createRoseHead(containerId) {
             const container = document.getElementById(containerId);
             
-            // Mengatur pembagian susunan kelopak mawar dari luar (lebar) sampai ke dalam kuncup spiral (padat)
             const layers = [
-                // Kelopak luar yang mekar lebar alami (Lapisan 1 & 2)
-                { count: 7, width: 56, height: 52, scale: 1.0,  borderRadius: '45% 45% 50% 50%', zIndex: 5, delayBase: 0.0, rotOffset: 0 },
-                { count: 6, width: 48, height: 46, scale: 0.92, borderRadius: '46% 46% 48% 48%', zIndex: 10, delayBase: 0.3, rotOffset: 25 },
+                // Lapisan luar mekar (Lebih kecil)
+                { count: 7, width: 36, height: 34, scale: 1.0,  borderRadius: '45% 45% 50% 50%', zIndex: 5, delayBase: 0.0, rotOffset: 0 },
+                { count: 6, width: 31, height: 30, scale: 0.92, borderRadius: '46% 46% 48% 48%', zIndex: 10, delayBase: 0.3, rotOffset: 25 },
                 
-                // Kelopak bagian tengah (Lapisan 3 & 4)
-                { count: 6, width: 38, height: 38, scale: 0.82, borderRadius: '48% 48% 45% 45%', zIndex: 15, delayBase: 0.6, rotOffset: 12 },
-                { count: 6, width: 30, height: 32, scale: 0.72, borderRadius: '50% 50% 43% 43%', zIndex: 20, delayBase: 0.9, rotOffset: 33 },
+                // Lapisan tengah
+                { count: 6, width: 25, height: 25, scale: 0.82, borderRadius: '48% 48% 45% 45%', zIndex: 15, delayBase: 0.6, rotOffset: 12 },
+                { count: 6, width: 20, height: 21, scale: 0.72, borderRadius: '50% 50% 43% 43%', zIndex: 20, delayBase: 0.9, rotOffset: 33 },
                 
-                // Bagian inti kuncup spiral padat melingkar (Lapisan 5, 6, & 7)
-                { count: 6, width: 22, height: 26, scale: 0.60, borderRadius: '50% 50% 40% 40%', zIndex: 25, delayBase: 1.2, rotOffset: 7 },
-                { count: 5, width: 16, height: 20, scale: 0.48, borderRadius: '50% 50% 35% 35%', zIndex: 30, delayBase: 1.5, rotOffset: 18 },
-                { count: 4, width: 11, height: 15, scale: 0.35, borderRadius: '50% 50% 30% 30%', zIndex: 35, delayBase: 1.8, rotOffset: 40 }
+                // Kuncup inti spiral melingkar padat
+                { count: 6, width: 14, height: 17, scale: 0.60, borderRadius: '50% 50% 40% 40%', zIndex: 25, delayBase: 1.2, rotOffset: 7 },
+                { count: 5, width: 10, height: 13, scale: 0.48, borderRadius: '50% 50% 35% 35%', zIndex: 30, delayBase: 1.5, rotOffset: 18 },
+                { count: 4, width: 7,  height: 10, scale: 0.35, borderRadius: '50% 50% 30% 30%', zIndex: 35, delayBase: 1.8, rotOffset: 40 }
             ];
 
             layers.forEach((layer) => {
@@ -481,9 +480,8 @@
                     const petal = document.createElement('div');
                     petal.className = 'petal';
                     
-                    // Membuat sudut putaran spiral yang rapat dan presisi melingkar
-                    const angle = (i * (360 / layer.count)) + layer.rotOffset + (Math.random() * 6 - 3);
-                    const delay = layer.delayBase + (i * 0.04);
+                    const angle = (i * (360 / layer.count)) + layer.rotOffset + (Math.random() * 4 - 2);
+                    const delay = layer.delayBase + (i * 0.03);
                     
                     petal.style.width = `${layer.width}px`;
                     petal.style.height = `${layer.height}px`;
@@ -503,7 +501,6 @@
             container.appendChild(center);
         }
 
-        // Terapkan pembuatan kelopak mawar baru ke elemen kepala mawar
         createRoseHead('head1');
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -682,6 +679,7 @@
             activeTarget.style.transform = `scale(1.02) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         }
 
+        // Reset kemiringan
         function resetGlobalTilt() {
             if (!activeTarget) return;
             activeTarget.style.setProperty('--rx', `0deg`);
@@ -721,6 +719,7 @@
                 document.getElementById('stem1').classList.add('grow');
             }, 300);
 
+            // Munculkan kartu pesan utama
             setTimeout(() => {
                 messageCard.classList.remove('hidden');
                 setTimeout(() => {
