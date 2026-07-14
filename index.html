@@ -21,6 +21,7 @@
             perspective: 1000px;
         }
 
+        /* --- LAYAR LOADING PRELOADER --- */
         #loading-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -204,7 +205,7 @@
         #heart { z-index: 2; display: none; }
         #falling-hearts { z-index: 3; display: none; pointer-events: none; }
 
-        /* --- ANIMASI TANAMAN DAN KEBUN MAWAR MEKAR --- */
+        /* --- ANIMASI TANAMAN DAN KEBUN MAWAR MERAH --- */
         #garden-container {
             position: absolute;
             bottom: 0;
@@ -258,6 +259,8 @@
             opacity: 1;
             transform: scale(1) rotate(var(--rot));
         }
+        
+        /* Wadah Kelopak Kepala Mawar */
         .flower-head {
             position: absolute;
             top: -20px;
@@ -271,60 +274,74 @@
             transform: translateX(-50%) scale(1);
         }
 
-        /* --- VISUAL KELOPAK BUNGA MAWAR MERAH MEKAR --- */
-        .petal {
+        /* --- MODEL STRUKTUR KELOPAK MAWAR BERLAPIS (REELS REFERENSI 2) --- */
+        .rose-petal {
             position: absolute;
-            background: linear-gradient(to bottom, #ff4d6d, #800f2f);
             border-radius: 50%;
-            width: 26px;
-            height: 26px;
-            left: 7px;
-            top: 7px;
             transform-origin: center center;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
         }
         
-        /* Susunan kelopak melingkar membentuk mawar merah yang tebal */
-        .petal:nth-child(1) { transform: translate(0, -10px) scale(1); }
-        .petal:nth-child(2) { transform: rotate(60deg) translate(0, -10px) scale(0.95); }
-        .petal:nth-child(3) { transform: rotate(120deg) translate(0, -10px) scale(1); }
-        .petal:nth-child(4) { transform: rotate(180deg) translate(0, -10px) scale(0.95); }
-        .petal:nth-child(5) { transform: rotate(240deg) translate(0, -10px) scale(1); }
-        .petal:nth-child(6) { transform: rotate(300deg) translate(0, -10px) scale(0.95); }
+        /* 1. Lapisan Kelopak Luar (Paling Besar & Bulat Semenjak Mekar) */
+        .rose-petal.outer {
+            background: linear-gradient(to bottom, #ef233c, #800f2f);
+            width: 32px;
+            height: 32px;
+            left: 4px;
+            top: 4px;
+        }
+        .rose-petal.outer:nth-child(1) { transform: rotate(0deg) translate(0, -12px); }
+        .rose-petal.outer:nth-child(2) { transform: rotate(60deg) translate(0, -12px); }
+        .rose-petal.outer:nth-child(3) { transform: rotate(120deg) translate(0, -12px); }
+        .rose-petal.outer:nth-child(4) { transform: rotate(180deg) translate(0, -12px); }
+        .rose-petal.outer:nth-child(5) { transform: rotate(240deg) translate(0, -12px); }
+        .rose-petal.outer:nth-child(6) { transform: rotate(300deg) translate(0, -12px); }
         
-        /* Lapisan kelopak mawar bagian dalam agar kuncup tengahnya telihat padat */
-        .petal-inner {
-            position: absolute;
-            background: linear-gradient(to bottom, #ef233c, #590d22);
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            left: 11px;
-            top: 11px;
-            transform-origin: center center;
+        /* 2. Lapisan Kelopak Tengah (Ukuran Sedang) */
+        .rose-petal.mid {
+            background: linear-gradient(to bottom, #ff4d6d, #a4163d);
+            width: 24px;
+            height: 24px;
+            left: 8px;
+            top: 8px;
             z-index: 2;
         }
-        .petal-inner:nth-child(7) { transform: rotate(30deg) translate(0, -5px); }
-        .petal-inner:nth-child(8) { transform: rotate(90deg) translate(0, -5px); }
-        .petal-inner:nth-child(9) { transform: rotate(150deg) translate(0, -5px); }
-        .petal-inner:nth-child(10) { transform: rotate(210deg) translate(0, -5px); }
-        .petal-inner:nth-child(11) { transform: rotate(270deg) translate(0, -5px); }
-        .petal-inner:nth-child(12) { transform: rotate(330deg) translate(0, -5px); }
+        .rose-petal.mid:nth-child(7) { transform: rotate(30deg) translate(0, -8px); }
+        .rose-petal.mid:nth-child(8) { transform: rotate(90deg) translate(0, -8px); }
+        .rose-petal.mid:nth-child(9) { transform: rotate(150deg) translate(0, -8px); }
+        .rose-petal.mid:nth-child(10) { transform: rotate(210deg) translate(0, -8px); }
+        .rose-petal.mid:nth-child(11) { transform: rotate(270deg) translate(0, -8px); }
+        .rose-petal.mid:nth-child(12) { transform: rotate(330deg) translate(0, -8px); }
 
-        /* Pusat Inti Mawar */
+        /* 3. Lapisan Kelopak Dalam (Kuncup Inti yang Padat) */
+        .rose-petal.inner {
+            background: linear-gradient(to bottom, #ff758f, #590d22);
+            width: 16px;
+            height: 16px;
+            left: 12px;
+            top: 12px;
+            z-index: 3;
+        }
+        .rose-petal.inner:nth-child(13) { transform: rotate(0deg) translate(0, -4px); }
+        .rose-petal.inner:nth-child(14) { transform: rotate(72deg) translate(0, -4px); }
+        .rose-petal.inner:nth-child(15) { transform: rotate(144deg) translate(0, -4px); }
+        .rose-petal.inner:nth-child(16) { transform: rotate(216deg) translate(0, -4px); }
+        .rose-petal.inner:nth-child(17) { transform: rotate(288deg) translate(0, -4px); }
+
+        /* Pusat Inti Mawar Gelap */
         .flower-center {
             position: absolute;
-            background: #4a0010;
+            background: #38040e;
             border-radius: 50%;
-            width: 10px;
-            height: 10px;
-            left: 15px;
-            top: 15px;
-            z-index: 3;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+            width: 8px;
+            height: 8px;
+            left: 16px;
+            top: 16px;
+            z-index: 4;
+            box-shadow: inset 0 0 4px rgba(0,0,0,0.9);
         }
 
-        /* --- LAYAR PESAN UTAMA MUNCUL --- */
+        /* --- LAYAR PESAN UTAMA --- */
         #message-card {
             background: linear-gradient(135deg, rgba(35, 6, 15, 0.96) 0%, rgba(15, 2, 5, 0.98) 100%);
             padding: 26px 24px;
@@ -488,30 +505,38 @@
             <div class="leaf left" style="--rot: -25deg;"></div>
             <div class="leaf right" style="--rot: 25deg;"></div>
             <div class="flower-head">
-                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
-                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
-                <div class="petal-inner"></div><div class="petal-inner"></div><div class="petal-inner"></div>
-                <div class="petal-inner"></div><div class="petal-inner"></div><div class="petal-inner"></div>
+                <div class="rose-petal outer"></div><div class="rose-petal outer"></div><div class="rose-petal outer"></div>
+                <div class="rose-petal outer"></div><div class="rose-petal outer"></div><div class="rose-petal outer"></div>
+                <div class="rose-petal mid"></div><div class="rose-petal mid"></div><div class="rose-petal mid"></div>
+                <div class="rose-petal mid"></div><div class="rose-petal mid"></div><div class="rose-petal mid"></div>
+                <div class="rose-petal inner"></div><div class="rose-petal inner"></div><div class="rose-petal inner"></div>
+                <div class="rose-petal inner"></div><div class="rose-petal inner"></div>
                 <div class="flower-center"></div>
             </div>
         </div>
+        
         <div class="flower-stem" id="stem2" style="left: 23%; height: 140px; transition-delay: 0.4s;">
             <div class="leaf left" style="--rot: -30deg;"></div>
             <div class="flower-head" style="transition-delay: 2.2s; transform: translateX(-50%) scale(0) scale(0.85);">
-                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
-                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
-                <div class="petal-inner"></div><div class="petal-inner"></div><div class="petal-inner"></div>
-                <div class="petal-inner"></div><div class="petal-inner"></div><div class="petal-inner"></div>
+                <div class="rose-petal outer"></div><div class="rose-petal outer"></div><div class="rose-petal outer"></div>
+                <div class="rose-petal outer"></div><div class="rose-petal outer"></div><div class="rose-petal outer"></div>
+                <div class="rose-petal mid"></div><div class="rose-petal mid"></div><div class="rose-petal mid"></div>
+                <div class="rose-petal mid"></div><div class="rose-petal mid"></div><div class="rose-petal mid"></div>
+                <div class="rose-petal inner"></div><div class="rose-petal inner"></div><div class="rose-petal inner"></div>
+                <div class="rose-petal inner"></div><div class="rose-petal inner"></div>
                 <div class="flower-center"></div>
             </div>
         </div>
+        
         <div class="flower-stem" id="stem3" style="left: 77%; height: 150px; transition-delay: 0.2s;">
             <div class="leaf right" style="--rot: 30deg;"></div>
             <div class="flower-head" style="transition-delay: 2.4s; transform: translateX(-50%) scale(0) scale(0.95);">
-                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
-                <div class="petal"></div><div class="petal"></div><div class="petal"></div>
-                <div class="petal-inner"></div><div class="petal-inner"></div><div class="petal-inner"></div>
-                <div class="petal-inner"></div><div class="petal-inner"></div><div class="petal-inner"></div>
+                <div class="rose-petal outer"></div><div class="rose-petal outer"></div><div class="rose-petal outer"></div>
+                <div class="rose-petal outer"></div><div class="rose-petal outer"></div><div class="rose-petal outer"></div>
+                <div class="rose-petal mid"></div><div class="rose-petal mid"></div><div class="rose-petal mid"></div>
+                <div class="rose-petal mid"></div><div class="rose-petal mid"></div><div class="rose-petal mid"></div>
+                <div class="rose-petal inner"></div><div class="rose-petal inner"></div><div class="rose-petal inner"></div>
+                <div class="rose-petal inner"></div><div class="rose-petal inner"></div>
                 <div class="flower-center"></div>
             </div>
         </div>
@@ -556,7 +581,6 @@
         const words = ["Laila", "sayanggg", "cantikk", "My Love", "Beautiful", "Forever", "❤️", "Mine", "Precious", "Always", "With You", "Heart"];
         const rainWords = ["Special For Laila", "Pouring my heart into pixels", "Laila", "❤️", "Beautiful", "My Love"];
         
-        // Frasa Preloader
         const phrases = [
             "gathering every proof...",
             "planning something sweet...",
@@ -725,7 +749,7 @@
             animationFallingId = requestAnimationFrame(animateFalling);
         }
 
-        // 3D TILT EFFECT
+        // EFFECT EFEK TILT 3D PARALLAX
         function handleGlobalTilt(e) {
             if (!activeTarget) return;
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -774,14 +798,14 @@
         window.addEventListener('touchmove', handleGlobalTilt, { passive: true });
         window.addEventListener('touchend', resetGlobalTilt);
 
-        // KLIK TOMBOL BUKA SEKARANG
+        // KLIK ACTION BUTTON BUKA SEKARANG
         startBtn.addEventListener('click', () => {
             bgMusic.muted = false;
             bgMusic.volume = 1.0;
             
             const forcePlayLocal = () => {
                 bgMusic.play().then(() => {
-                    console.log("Sukses memutar audio!");
+                    console.log("Audio berhasil berputar!");
                 }).catch(err => {
                     bgMusic.play();
                 });
@@ -800,7 +824,6 @@
                 welcomeContainer.classList.add('hidden');
             }, 800);
 
-            // Tampilkan Hati & Kebun Bunga Mawar Merah
             canvasHeart.style.display = 'block';
             canvasFalling.style.display = 'block';
             gardenContainer.style.display = 'block';
@@ -810,14 +833,12 @@
             animateHeart();
             animateFalling();
 
-            // Memicu pertumbuhan tangkai & mekarnya bunga mawar merah
             setTimeout(() => {
                 document.getElementById('stem1').classList.add('grow');
                 document.getElementById('stem2').classList.add('grow');
                 document.getElementById('stem3').classList.add('grow');
             }, 200);
 
-            // Jeda 5 detik sebelum surat cinta utama muncul anggun
             setTimeout(() => {
                 messageCard.classList.remove('hidden');
                 setTimeout(() => {
