@@ -10,42 +10,77 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #050102;
+            background-color: #060001;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             overflow: hidden;
             color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: fixed;
+            position: fixed; 
+            perspective: 1000px;
         }
 
-        /* --- PRELOADER ANIMASI --- */
-        #loader {
+        /* --- LAYAR LOADING PRELOADER --- */
+        #loading-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #050102;
+            background-color: #060001;
             z-index: 999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.6s ease;
-            pointer-events: none; /* Supaya tidak menghalangi klik setelah hilang */
+            transition: opacity 0.8s ease;
         }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255, 77, 109, 0.1);
-            border-top-color: #ff4d6d;
-            border-radius: 50%;
-            animation: spin 1s infinite linear;
-            box-shadow: 0 0 15px rgba(255, 77, 109, 0.4);
+        .loading-heart {
+            font-size: 35px;
+            animation: flowerPulsePreload 1.2s infinite ease-in-out;
+            filter: drop-shadow(0 0 15px #ef233c);
+            margin-bottom: 15px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-title {
+            font-size: 1.5rem;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            color: #ffe5ec;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .loading-text {
+            font-size: 0.75rem;
+            color: #a0a0a0;
+            font-family: monospace;
+            height: 15px;
+            margin-bottom: 20px;
+        }
+        .progress-container {
+            width: 120px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            margin-bottom: 8px;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff4d6d, #d90429);
+            box-shadow: 0 0 8px #ff4d6d;
+        }
+        .progress-percentage {
+            font-size: 0.7rem;
+            color: #ff4d6d;
+            font-family: monospace;
+        }
 
-        /* --- LAYAR UTAMA (TOMBOL MASUK) --- */
-        .screen-container {
+        @keyframes flowerPulsePreload {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- LAYAR UTAMA & PERSPEKTIF --- */
+        .perspective-container {
             position: absolute;
             z-index: 10;
             display: flex;
@@ -53,390 +88,657 @@
             align-items: center;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* KUNCI PERBAIKAN: Supaya area kosong tidak memblokir klik */
+            pointer-events: none;
+            transform-style: preserve-3d;
         }
-        
-        #welcome-box {
-            background: rgba(15, 5, 8, 0.85);
-            padding: 40px 30px;
-            border-radius: 28px;
+
+        #welcome-screen-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+            pointer-events: auto;
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        #welcome-screen {
+            background: linear-gradient(135deg, rgba(35, 6, 15, 0.9) 0%, rgba(15, 2, 5, 0.95) 100%);
+            padding: 35px 24px;
+            border-radius: 24px;
             text-align: center;
-            width: 290px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 77, 109, 0.2);
-            transition: all 0.6s ease;
-            pointer-events: auto; /* Mengizinkan klik khusus pada kotak ini */
+            width: 280px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(255, 30, 60, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            transform-style: preserve-3d;
+            z-index: 5;
         }
-        
+
+        .heart-icon {
+            font-size: 55px;
+            animation: heartPulse 0.9s infinite;
+            filter: drop-shadow(0 0 25px #e60026);
+            margin-bottom: 10px;
+        }
+
         h1 {
-            font-size: 1.35rem;
-            letter-spacing: 2px;
-            color: #fff0f3;
-            margin-bottom: 25px;
-            font-weight: 400;
+            font-size: 1.45rem;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            margin: 15px 0 5px 0;
+            color: #ffe5ec;
         }
-        
+
+        #status {
+            color: #ff4d6d;
+            font-size: 0.72rem;
+            margin-bottom: 25px;
+            font-family: monospace;
+            letter-spacing: 1.5px;
+            font-weight: bold;
+        }
+
         #start-btn {
-            background: linear-gradient(135deg, #ff4d6d, #c9184a);
+            background: linear-gradient(45deg, #d90429, #ef233c);
             color: white;
             border: none;
-            padding: 14px 38px;
-            font-size: 0.85rem;
+            padding: 12px 35px;
+            font-size: 0.88rem;
             font-weight: 600;
             cursor: pointer;
-            border-radius: 50px;
+            border-radius: 30px;
             letter-spacing: 1px;
-            box-shadow: 0 8px 20px rgba(201, 24, 74, 0.4);
-            transition: transform 0.1s, box-shadow 0.2s;
-            pointer-events: auto; /* Memastikan tombol mutlak bisa diklik */
+            box-shadow: 0 10px 25px rgba(217, 4, 41, 0.4);
+            transition: all 0.3s ease;
         }
-        #start-btn:active { transform: scale(0.95); }
 
-        /* --- ELEMENT INTERAKTIF UTAMA --- */
         canvas {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            pointer-events: none;
         }
-        #canvas-bg { z-index: 1; }
-        #canvas-heart { z-index: 2; opacity: 0; transition: opacity 2s ease; }
+        
+        #initial-rain { z-index: 1; } 
+        #heart { z-index: 2; display: none; }
+        #garden-container { z-index: 8; display: none; }
+        #falling-hearts { z-index: 3; display: none; pointer-events: none; }
 
-        /* --- BUKET MAWAR REALISTIS LUNAK --- */
-        #rose-garden {
+        /* --- KEBUN MAWAR ANIMASI BERLAPIS DAN DINAMIS --- */
+        #garden-container {
             position: absolute;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            max-width: 500px;
-            height: 100%;
-            z-index: 3;
-            display: none;
+            max-width: 450px;
+            height: 520px;
             pointer-events: none;
         }
-        .rose-stem {
+        
+        .flower-stem {
             position: absolute;
-            width: 3px;
-            background: linear-gradient(to top, #132a13, #31572c);
-            box-shadow: 0 0 5px rgba(0,0,0,0.5);
-            bottom: 60px;
-            transform-origin: bottom center;
+            width: 5px;
+            background: linear-gradient(to top, #112211, #2d4a1e);
+            border-radius: 3px;
             transform: scaleY(0);
-            transition: transform 2s cubic-bezier(0.1, 0.8, 0.3, 1);
+            transform-origin: bottom center;
+            transition: transform 3s cubic-bezier(0.1, 0.75, 0.25, 1);
         }
-        .rose-stem.grow { transform: scaleY(1); }
+        
+        .flower-stem.grow {
+            transform: scaleY(1);
+        }
 
-        /* Daun Artistik */
-        .rose-leaf {
+        .leaf {
             position: absolute;
-            width: 16px;
-            height: 10px;
-            background: #31572c;
-            border-radius: 50% 0 50% 0;
+            width: 22px;
+            height: 12px;
+            background: #2d4a1e;
             opacity: 0;
-            transition: opacity 0.5s ease 1.5s;
+            transform: scale(0);
+            transition: transform 1s ease 1.8s, opacity 1s ease 1.8s;
         }
-        .rose-leaf.left { left: -14px; transform: rotate(-30deg); }
-        .rose-leaf.right { right: -14px; transform: rotate(30deg); border-radius: 0 50% 0 50%; }
-        .rose-stem.grow .rose-leaf { opacity: 0.8; }
-
-        /* Kepala Bunga Mekar 3D */
-        .rose-head {
+        .leaf.left {
+            left: -18px;
+            border-radius: 15px 0 15px 0;
+            transform-origin: right bottom;
+        }
+        .leaf.right {
+            right: -18px;
+            border-radius: 0 15px 0 15px;
+            transform-origin: left bottom;
+        }
+        .flower-stem.grow .leaf {
+            opacity: 1;
+            transform: scale(1) rotate(var(--rot));
+        }
+        
+        /* Kepala Mawar */
+        .flower-head {
             position: absolute;
-            top: -20px;
             left: 50%;
             transform: translateX(-50%) scale(0);
-            width: 65px;
-            height: 65px;
             transform-origin: center center;
-            transition: transform 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) 1s;
+            transition: transform 2.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s;
         }
-        .rose-stem.grow .rose-head { transform: translateX(-50%) scale(1); }
+        
+        .flower-stem.grow .flower-head {
+            transform: translateX(-50%) scale(1);
+        }
 
-        /* Desain Kelopak Organik Berlapis */
-        .rose-petal {
+        /* Kelopak Bunga Dibuat Jauh Lebih Besar & Mekar Luas */
+        .petal {
             position: absolute;
-            left: 50%; top: 50%;
-            border-radius: 50% 50% 45% 45%;
+            left: 50%;
+            top: 50%;
+            border-radius: 50% 50% 48% 48%;
             transform-origin: bottom center;
-            background: linear-gradient(145deg, #ff4d6d 0%, #a4133c 60%, #590d22 100%);
-            box-shadow: inset 1px 1px 2px rgba(255,255,255,0.2), 0 3px 8px rgba(0,0,0,0.4);
-            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3));
+            background: linear-gradient(135deg, #ff1e46 0%, #a70021 50%, #6b0012 100%);
+            box-shadow: inset 0px 3px 6px rgba(255,255,255,0.25), 0px 6px 15px rgba(0,0,0,0.6);
+            opacity: 0;
+            transform: translate(-50%, -100%) scale(0) rotate(0deg);
+            transition: transform 3s cubic-bezier(0.1, 0.8, 0.2, 1), opacity 2.5s ease;
         }
 
-        /* --- KARTU PESAN ELEGAN --- */
+        /* Saat bunga tumbuh, picu mekar besar */
+        .flower-stem.grow .petal {
+            opacity: 0.98;
+            transform: translate(-50%, -100%) scale(var(--sc)) rotate(var(--rt));
+        }
+
+        .flower-center {
+            position: absolute;
+            background: #300008;
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            left: 33px;
+            top: 33px;
+            z-index: 99;
+            box-shadow: inset 0 0 6px #000;
+        }
+
+        /* --- LAYAR PESAN UTAMA --- */
         #message-card {
-            background: linear-gradient(135deg, rgba(20, 6, 10, 0.96) 0%, rgba(10, 2, 4, 0.98) 100%);
-            padding: 30px 25px;
+            background: linear-gradient(135deg, rgba(35, 6, 15, 0.96) 0%, rgba(15, 2, 5, 0.98) 100%);
+            padding: 26px 24px;
             border-radius: 24px;
             max-width: 340px;
-            width: 85%;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255, 77, 109, 0.15);
-            border: 1px solid rgba(255, 77, 109, 0.25);
+            width: 88%;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(239, 35, 60, 0.15);
+            text-align: left;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             opacity: 0;
-            transform: scale(0.9) translateY(20px);
-            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
-            z-index: 90;
-            display: none;
+            transform: scale(0.8) translateZ(-100px);
+            transition: opacity 1s cubic-bezier(0.19, 1, 0.22, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
             box-sizing: border-box;
-            pointer-events: auto; /* Mengizinkan interaksi teks */
+            position: relative;
+            transform-style: preserve-3d;
+            pointer-events: none;
+            z-index: 90;
         }
+        
+        .alive-flow {
+            animation: floatAlive 4.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes floatAlive {
+            0% { transform: translateY(0px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
+            100% { transform: translateY(-8px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
+        }
+
         #message-card.show {
             opacity: 1;
-            transform: scale(1) translateY(0);
+            transform: scale(1) translateZ(0px);
+            pointer-events: auto;
         }
-        .recipient {
+
+        .hidden { display: none !important; }
+
+        #close-btn {
+            float: right;
+            cursor: pointer;
             font-size: 1.2rem;
-            color: #ffe5ec;
-            margin: 0 0 12px 0;
-            font-weight: 600;
+            color: #a0a0a0;
+            padding: 4px;
         }
-        .message-body {
+
+        #close-btn:hover { color: #ef233c; }
+
+        <h2>Just For You</h2>
+        .recipient {
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-top: 0;
+            margin-bottom: 4px;
+            color: #ffe5ec;
+        }
+        
+        .card-divider {
+            width: 40px;
+            height: 2.5px;
+            background: linear-gradient(90deg, #ef233c, #ff4d6d);
+            margin-bottom: 16px;
+            border-radius: 2px;
+        }
+
+        .message {
             font-size: 0.88rem;
             line-height: 1.6;
-            color: #f0e6e8;
-            text-align: justify;
-            margin: 0;
+            color: #e5e5e5;
             font-weight: 300;
+            margin: 0;
+            text-align: justify;
         }
-        .message-body em {
-            color: #ff758f;
-            font-style: normal;
+        
+        .message em {
+            font-style: italic;
+            color: #ff85a1;
             font-weight: 400;
         }
+
         .signature {
             text-align: right;
-            margin-top: 20px;
-            color: #ff4d6d;
-            font-weight: 500;
             font-size: 0.95rem;
+            color: #ef233c;
+            margin-top: 18px;
+            font-family: monospace;
+            font-weight: bold;
         }
-        .hidden { display: none !important; }
+
+        @keyframes heartPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
 
-    <!-- MUSIK LATAR -->
+    <!-- AUDIO BACKGROUND -->
     <audio id="bg-music" loop preload="auto">
         <source src="thinking.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- LOADING SCREEN -->
-    <div id="loader"><div class="spinner"></div></div>
+    <!-- LAYAR LOADING PRELOADER -->
+    <div id="loading-screen">
+        <div class="loading-heart">🌹</div>
+        <div class="loading-title">blooming for you</div>
+        <div class="loading-text" id="loading-phrases">initializing systems...</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="bar"></div>
+        </div>
+        <div class="progress-percentage" id="percent">0%</div>
+    </div>
 
-    <!-- BACKGROUND EFFECTS -->
-    <canvas id="canvas-bg"></canvas>
-    <canvas id="canvas-heart"></canvas>
+    <!-- Canvas Hujan Teks Awal -->
+    <canvas id="initial-rain"></canvas>
 
-    <!-- TOMBOL PINTU MASUK -->
-    <div class="screen-container" id="welcome-layer">
-        <div id="welcome-box">
-            <h1>Special for Laila</h1>
-            <button id="start-btn">BUKA SEKARANG</button>
+    <!-- Kontainer Tampilan Depan -->
+    <div class="perspective-container" id="welcome-container">
+        <div id="welcome-screen-wrapper" class="alive-flow">
+            <div id="welcome-screen">
+                <div class="heart-icon">❤️</div>
+                <h1>special-for-laila</h1>
+                <p id="status">TAP TO OPEN MY HONEST FEELINGS...</p>
+                <button id="start-btn">BUKA SEKARANG</button>
+            </div>
         </div>
     </div>
 
-    <!-- STRUKTUR 3 MAWAR PROPORSIONAL & SIMETRIS -->
-    <div id="rose-garden">
-        <!-- Kiri -->
-        <div class="rose-stem" id="stem-left" style="left: 22%; height: 160px;">
-            <div class="rose-leaf left" style="top: 70px;"></div>
-            <div class="rose-head" id="head-left"></div>
+    <!-- Canvas Hati Kumpulan Teks & Hati Gugur -->
+    <canvas id="heart"></canvas>
+    <canvas id="falling-hearts"></canvas>
+
+    <!-- WADAH UTAMA KEBUN 3 TANGKAI MAWAR MERAH (TANGKAI PENDEK & NAIK KE ATAS) -->
+    <div id="garden-container" style="height: 520px;">
+        <!-- Tangkai Tengah (Naik paling tinggi di tengah hati) -->
+        <div class="flower-stem" id="stem1" style="left: 50%; height: 160px; bottom: 180px; transition-delay: 0.2s;">
+            <div class="leaf left" style="top: 70px; --rot: -25deg;"></div>
+            <div class="leaf right" style="top: 40px; --rot: 25deg;"></div>
+            <div class="flower-head" id="head1" style="width: 80px; height: 80px; top: -20px;"></div>
         </div>
-        <!-- Tengah (Lebih Tinggi & Dominan) -->
-        <div class="rose-stem" id="stem-center" style="left: 50%; height: 210px;">
-            <div class="rose-leaf left" style="top: 90px;"></div>
-            <div class="rose-leaf right" style="top: 60px;"></div>
-            <div class="rose-head" id="head-center"></div>
+        
+        <!-- Tangkai Kiri -->
+        <div class="flower-stem" id="stem2" style="left: 20%; height: 130px; bottom: 130px; transition-delay: 0.5s;">
+            <div class="leaf left" style="top: 50px; --rot: -30deg;"></div>
+            <div class="flower-head" id="head2" style="width: 80px; height: 80px; top: -20px; transition-delay: 2.5s;"></div>
         </div>
-        <!-- Kanan -->
-        <div class="rose-stem" id="stem-right" style="left: 78%; height: 160px;">
-            <div class="rose-leaf right" style="top: 70px;"></div>
-            <div class="rose-head" id="head-right"></div>
+        
+        <!-- Tangkai Kanan -->
+        <div class="flower-stem" id="stem3" style="left: 80%; height: 140px; bottom: 140px; transition-delay: 0.3s;">
+            <div class="leaf right" style="top: 60px; --rot: 30deg;"></div>
+            <div class="flower-head" id="head3" style="width: 80px; height: 80px; top: -20px; transition-delay: 2.4s;"></div>
         </div>
     </div>
 
-    <!-- KARTU PESAN UTAMA -->
-    <div class="screen-container">
-        <div id="message-card">
+    <!-- Kontainer Pesan Utama -->
+    <div class="perspective-container">
+        <div id="message-card" class="hidden">
+            <span id="close-btn">&times;</span>
+            <h2>Just For You</h2>
             <p class="recipient">Hai cantikk,</p>
-            <p class="message-body">
+            <div class="card-divider"></div>
+            <p class="message">
+                Hai cantikk,<br>
                 <em>I actually made this just because I was bored</em>, tapi kamu tahu sendiri kan kalau aku paling payah kalau harus ngomong manis langsung di depanmu.<br><br>
                 <em>But honestly, since you came into my life, everything just gets so much more fun</em>. Dari hal-hal random yang kita bahas sampai <em>our late-night talks</em>, selalu sukses bikin hari-hari aku yang biasa aja jadi lebih bermakna. <em>You are literally the comfiest home I’ve ever had</em>.<br><br>
                 Makasih ya sayanggg <em>for always being so patient, staying by my side, and accepting all my flaws. Let's build more ridiculous, fun, and happy memories together, okay?</em>
             </p>
-            <div class="signature">~ Putra</div>
+            <p class="signature">~ Putra</p>
         </div>
     </div>
 
     <script>
         const startBtn = document.getElementById('start-btn');
         const bgMusic = document.getElementById('bg-music');
-        const welcomeLayer = document.getElementById('welcome-layer');
-        const welcomeBox = document.getElementById('welcome-box');
-        const roseGarden = document.getElementById('rose-garden');
+        const welcomeContainer = document.getElementById('welcome-container');
+        const welcomeWrapper = document.getElementById('welcome-screen-wrapper');
+        const canvasRain = document.getElementById('initial-rain');
+        const canvasHeart = document.getElementById('heart');
+        const canvasFalling = document.getElementById('falling-hearts');
         const messageCard = document.getElementById('message-card');
-        const canvasBg = document.getElementById('canvas-bg');
-        const canvasHeart = document.getElementById('canvas-heart');
+        const closeBtn = document.getElementById('close-btn');
+        const gardenContainer = document.getElementById('garden-container');
         
-        const ctxBg = canvasBg.getContext('2d');
+        const ctxRain = canvasRain.getContext('2d');
         const ctxHeart = canvasHeart.getContext('2d');
+        const ctxFalling = canvasFalling.getContext('2d');
 
-        const words = ["Laila", "sayanggg", "cantikk", "My Love", "Beautiful", "Forever", "❤️", "Mine", "Precious", "Always", "With You"];
+        let animationRainId, animationHeartId, animationFallingId;
+        let activeTarget = welcomeWrapper; 
+        
+        const words = ["Laila", "sayanggg", "cantikk", "My Love", "Beautiful", "Forever", "❤️", "Mine", "Precious", "Always", "With You", "Heart"];
+        const rainWords = ["Special For Laila", "Pouring my heart into pixels", "Laila", "❤️", "Beautiful", "My Love"];
+        const phrases = ["gathering every proof...", "planning something sweet...", "loading assets...", "almost ready to bloom..."];
 
-        // Menghilangkan Loader Layar
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('loader');
-            loader.style.opacity = '0';
-            setTimeout(() => loader.classList.add('hidden'), 600);
-        });
-
-        function resize() {
-            canvasBg.width = window.innerWidth; canvasBg.height = window.innerHeight;
-            canvasHeart.width = window.innerWidth; canvasHeart.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        // 1. MEMBUAT KEPALA MAWAR REALISTIS DENGAN LAPISAN KELOPAK
-        function buildRose(containerId) {
+        // GENERATOR KELOPAK MAWAR DENGAN UKURAN DIAMETER JAUH LEBIH BESAR
+        function createRoseHead(containerId) {
             const container = document.getElementById(containerId);
-            const petalLayers = [
-                { count: 9, size: 60, scale: 1.0, delay: 0 },
-                { count: 8, size: 48, scale: 0.8, delay: 0.3 },
-                { count: 6, size: 36, scale: 0.6, delay: 0.6 },
-                { count: 5, size: 24, scale: 0.4, delay: 0.9 }
+            // Mengubah ukuran kelopak (width & height) agar mekar sangat besar dan padat
+            const layers = [
+                { count: 9,  width: 75, height: 75, scale: 1.0, zIndex: 1, delayBase: 0.0 }, // Lapisan Luar Sangat Besar
+                { count: 8,  width: 60, height: 60, scale: 0.9, zIndex: 2, delayBase: 0.4 }, // Lapisan Menengah-Luar
+                { count: 6,  width: 45, height: 45, scale: 0.7, zIndex: 3, delayBase: 0.8 }, // Lapisan Menengah-Dalam
+                { count: 5,  width: 30, height: 30, scale: 0.5, zIndex: 4, delayBase: 1.2 }  // Inti Kuncup
             ];
 
-            petalLayers.forEach(layer => {
+            layers.forEach((layer) => {
                 for (let i = 0; i < layer.count; i++) {
                     const petal = document.createElement('div');
-                    petal.className = 'rose-petal';
+                    petal.className = 'petal';
+                    
                     const angle = (i * (360 / layer.count)) + (Math.random() * 10 - 5);
+                    const delay = layer.delayBase + (i * 0.06);
                     
-                    petal.style.width = `${layer.size}px`;
-                    petal.style.height = `${layer.size}px`;
-                    petal.style.transform = `translate(-50%, -100%) scale(${layer.scale}) rotate(${angle}deg)`;
-                    petal.style.transition = `transform 1.5s cubic-bezier(0.16, 1, 0.3, 1) ${1.2 + layer.delay}s`;
+                    petal.style.width = `${layer.width}px`;
+                    petal.style.height = `${layer.height}px`;
+                    petal.style.zIndex = layer.zIndex;
                     
+                    petal.style.setProperty('--rt', `${angle}deg`);
+                    petal.style.setProperty('--sc', `${layer.scale}`);
+                    petal.style.transitionDelay = `${2.4 + delay}s`;
+
                     container.appendChild(petal);
                 }
             });
-        }
-        buildRose('head-left');
-        buildRose('head-center');
-        buildRose('head-right');
 
-        // 2. BACKGROUND: PARTIKEL AMBIENT CAHAYA MALAM
-        class AmbientParticle {
-            constructor() { this.reset(); this.y = Math.random() * canvasBg.height; }
+            const center = document.createElement('div');
+            center.className = 'flower-center';
+            container.appendChild(center);
+        }
+
+        // Jalankan pembuatan kepala mawar besar
+        createRoseHead('head1');
+        createRoseHead('head2');
+        createRoseHead('head3');
+
+        // LOGIKA LOADING PRELOADER
+        window.addEventListener('DOMContentLoaded', () => {
+            const bar = document.getElementById('bar');
+            const percent = document.getElementById('percent');
+            const textEl = document.getElementById('loading-phrases');
+            let progress = 0;
+
+            let phraseIdx = 0;
+            const phraseInterval = setInterval(() => {
+                phraseIdx = (phraseIdx + 1) % phrases.length;
+                textEl.innerText = phrases[phraseIdx];
+            }, 1200);
+
+            const loadTimer = setInterval(() => {
+                progress += Math.floor(Math.random() * 4) + 1;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(loadTimer);
+                    clearInterval(phraseInterval);
+                    setTimeout(() => {
+                        const preloader = document.getElementById('loading-screen');
+                        preloader.style.opacity = '0';
+                        setTimeout(() => preloader.classList.add('hidden'), 800);
+                    }, 500);
+                }
+                bar.style.width = progress + '%';
+                percent.innerText = progress + '%';
+            }, 50);
+        });
+
+        function resizeCanvases() {
+            canvasRain.width = window.innerWidth;
+            canvasRain.height = window.innerHeight;
+            canvasHeart.width = window.innerWidth;
+            canvasHeart.height = window.innerHeight;
+            canvasFalling.width = window.innerWidth;
+            canvasFalling.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+
+        // FASE 1: TEXT RAIN
+        class RainText {
+            constructor() { this.reset(); this.y = Math.random() * canvasRain.height; }
             reset() {
-                this.x = Math.random() * canvasBg.width;
-                this.y = canvasBg.height + 20;
-                this.size = Math.random() * 2 + 1;
-                this.speed = Math.random() * 0.5 + 0.3;
-                this.alpha = Math.random() * 0.3 + 0.1;
+                this.x = Math.random() * canvasRain.width;
+                this.y = -40;
+                this.word = rainWords[Math.floor(Math.random() * rainWords.length)];
+                this.speed = Math.random() * 1.5 + 0.8;
+                this.opacity = Math.random() * 0.25 + 0.15;
+                this.size = Math.random() * 4 + 11;
             }
             update() {
-                this.y -= this.speed;
-                if (this.y < -10) this.reset();
+                this.y += this.speed;
+                if (this.y > canvasRain.height + 40) this.reset();
             }
             draw() {
-                ctxBg.fillStyle = `rgba(255, 77, 109, ${this.alpha})`;
-                ctxBg.beginPath();
-                ctxBg.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctxBg.fill();
+                ctxRain.fillStyle = `rgba(255, 133, 161, ${this.opacity})`;
+                ctxRain.font = `italic bold ${this.size}px monospace`;
+                ctxRain.fillText(this.word, this.x, this.y);
             }
         }
-        const ambients = Array.from({ length: 40 }, () => new AmbientParticle());
-        function drawBg() {
-            ctxBg.clearRect(0, 0, canvasBg.width, canvasBg.height);
-            ambients.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(drawBg);
-        }
-        drawBg();
 
-        // 3. SILUET HATI TEKS DENGAN SPACING RAPI
-        function getHeartCoordinate(t, scale) {
+        const rainParticles = [];
+        for(let i = 0; i < 40; i++) rainParticles.push(new RainText());
+
+        function animateRain() {
+            ctxRain.clearRect(0, 0, canvasRain.width, canvasRain.height);
+            rainParticles.forEach(p => { p.update(); p.draw(); });
+            animationRainId = requestAnimationFrame(animateRain);
+        }
+        animateRain();
+
+        // FASE 2: KALIMAT BENTUK HATI BERDETAK
+        function getHeartPoint(t, scale) {
             const x = 16 * Math.pow(Math.sin(t), 3);
-            const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+            const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
             return { x: x * scale, y: y * scale };
         }
 
-        class HeartText {
-            constructor(t, index, total) {
-                const isMobile = canvasHeart.width < 600;
-                const scaleFactor = isMobile ? 7 : 11;
-                const coord = getHeartCoordinate(t, scaleFactor);
-                
-                this.x = canvasHeart.width / 2 + coord.x;
-                this.y = canvasHeart.height / 2 + coord.y - 50;
-                this.word = words[index % words.length];
-                this.alpha = Math.random() * 0.20 + 0.40;
-                this.fontSize = isMobile ? '10px' : '13px';
+        class HeartParticle {
+            constructor(canvasWidth, canvasHeight, index, total) { this.reset(canvasWidth, canvasHeight, index, total); }
+            reset(canvasWidth, canvasHeight, index, total) {
+                this.t = (index / total) * Math.PI * 2;
+                this.word = words[Math.floor(Math.random() * words.length)];
+                const isMobile = canvasWidth < 600;
+                this.baseScale = isMobile ? (6 + Math.random() * 2) : (9 + Math.random() * 3);
+                const point = getHeartPoint(this.t, this.baseScale);
+                this.targetX = canvasWidth / 2 + point.x;
+                this.targetY = canvasHeight / 2 + point.y;
+                this.x = Math.random() * canvasWidth;
+                this.y = Math.random() * canvasHeight;
+                this.speed = Math.random() * 0.02 + 0.015;
+                this.opacity = Math.random() * 0.35 + 0.55;
+                this.size = isMobile ? (Math.random() * 4 + 8) : (Math.random() * 6 + 10);
+            }
+            update(beatFactor) {
+                const point = getHeartPoint(this.t, this.baseScale * beatFactor);
+                const actualTargetX = canvasHeart.width / 2 + point.x;
+                const actualTargetY = canvasHeart.height / 2 + point.y;
+                this.x += (actualTargetX - this.x) * this.speed;
+                this.y += (actualTargetY - this.y) * this.speed;
             }
             draw() {
-                ctxHeart.fillStyle = `rgba(255, 77, 109, ${this.alpha})`;
-                ctxHeart.font = `400 ${this.fontSize} -apple-system, sans-serif`;
-                ctxHeart.textAlign = 'center';
-                ctxHeart.textBaseline = 'middle';
+                ctxHeart.fillStyle = `rgba(239, 35, 60, ${this.opacity})`;
+                ctxHeart.font = `bold ${this.size}px sans-serif`;
+                ctxHeart.textAlign = "center";
+                ctxHeart.textBaseline = "middle";
                 ctxHeart.fillText(this.word, this.x, this.y);
             }
         }
 
-        const heartTexts = [];
-        function initHeart() {
-            heartTexts.length = 0;
-            const totalWords = 70; // Dikurangi agar super bersih dan tidak padat merayap
-            for (let i = 0; i < totalWords; i++) {
-                const t = (i / totalWords) * Math.PI * 2;
-                heartTexts.push(new HeartText(t, i, totalWords));
+        class FallingHeart {
+            constructor() { this.reset(); this.y = Math.random() * canvasFalling.height - canvasFalling.height; }
+            reset() {
+                this.x = Math.random() * canvasFalling.width;
+                this.y = -20;
+                this.size = Math.random() * 12 + 8;
+                this.speedY = Math.random() * 1.2 + 0.8;
+                this.speedX = Math.sin(Math.random() * 2) * 0.4;
+                this.opacity = Math.random() * 0.4 + 0.3;
+                const heartTypes = ['❤️', '💖', '💝', '💕'];
+                this.char = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+            }
+            update() {
+                this.y += this.speedY; this.x += this.speedX;
+                if (this.y > canvasFalling.height) this.reset();
+            }
+            draw() {
+                ctxFalling.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctxFalling.font = `${this.size}px sans-serif`;
+                ctxFalling.fillText(this.char, this.x, this.y);
             }
         }
 
-        function drawHeartLayer() {
-            ctxHeart.clearRect(0, 0, canvasHeart.width, canvasHeart.height);
-            heartTexts.forEach(t => t.draw());
+        const heartParticles = [];
+        const fallingHearts = [];
+        const totalParticles = 220; 
+
+        function initParticles() {
+            heartParticles.length = 0;
+            for (let i = 0; i < totalParticles; i++) heartParticles.push(new HeartParticle(canvasHeart.width, canvasHeart.height, i, totalParticles));
+            fallingHearts.length = 0;
+            for (let i = 0; i < 30; i++) fallingHearts.push(new FallingHeart());
         }
 
-        // PENGGERAK UTAMA SAAT KLIK (SUDAH AMAN & AKTIF)
-        startBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Mencegah glitch pada event bubbling
+        let tick = 0;
+        function animateHeart() {
+            ctxHeart.clearRect(0, 0, canvasHeart.width, canvasHeart.height);
+            tick += 0.05;
+            const beatFactor = 1 + Math.abs(Math.sin(tick)) * 0.12;
+            heartParticles.forEach(p => { p.update(beatFactor); p.draw(); });
+            animationHeartId = requestAnimationFrame(animateHeart);
+        }
 
-            // Musik menyala
-            bgMusic.muted = false;
-            bgMusic.play().catch(() => {});
+        function animateFalling() {
+            ctxFalling.clearRect(0, 0, canvasFalling.width, canvasFalling.height);
+            fallingHearts.forEach(h => { h.update(); h.draw(); });
+            animationFallingId = requestAnimationFrame(animateFalling);
+        }
 
-            // Animasi hilangkan kotak depan
-            welcomeBox.style.opacity = '0';
-            welcomeBox.style.transform = 'scale(0.9) translateY(-10px)';
+        // PARALLAX 3D TILT EFFECT
+        function handleGlobalTilt(e) {
+            if (!activeTarget) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
-            setTimeout(() => {
-                welcomeLayer.classList.add('hidden');
-            }, 600);
+            const rect = activeTarget.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const rotateX = (centerY - clientY) / (window.innerHeight / 2) * 15; 
+            const rotateY = (clientX - centerX) / (window.innerWidth / 2) * 15;
+            
+            activeTarget.style.setProperty('--rx', `${rotateX}deg`);
+            activeTarget.style.setProperty('--ry', `${rotateY}deg`);
+            
+            activeTarget.style.transform = `scale(1.02) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        }
 
-            // Tampilkan siluet hati teks
-            initHeart();
-            drawHeartLayer();
+        function resetGlobalTilt() {
+            if (!activeTarget) return;
+            activeTarget.style.setProperty('--rx', `0deg`);
+            activeTarget.style.setProperty('--ry', `0deg`);
+            activeTarget.style.transform = `scale(1) rotateX(0deg) rotateY(0deg)`;
+        }
+
+        window.addEventListener('mousemove', handleGlobalTilt);
+        window.addEventListener('mouseleave', resetGlobalTilt);
+        window.addEventListener('touchmove', handleGlobalTilt, { passive: true });
+        window.addEventListener('touchend', resetGlobalTilt);
+
+        // KLIK TOMBOL BUKA SEKARANG
+        startBtn.addEventListener('click', () => {
+            bgMusic.muted = false;
+            bgMusic.volume = 1.0;
+            bgMusic.play().catch(() => bgMusic.play());
+
+            activeTarget = null;
+            welcomeWrapper.style.opacity = '0';
+            welcomeWrapper.style.transform = 'scale(0.85) translateZ(-80px)';
+            
+            cancelAnimationFrame(animationRainId);
+            canvasRain.style.display = 'none';
+
+            setTimeout(() => { welcomeContainer.classList.add('hidden'); }, 800);
+
             canvasHeart.style.display = 'block';
-            setTimeout(() => canvasHeart.style.opacity = '1', 100);
+            canvasFalling.style.display = 'block';
+            gardenContainer.style.display = 'block';
+            
+            resizeCanvases();
+            initParticles();
+            animateHeart();
+            animateFalling();
 
-            // Tumbuhkan buket mawar
-            roseGarden.style.display = 'block';
+            // Pemicu pertumbuhan 3 tangkai bunga
             setTimeout(() => {
-                document.getElementById('stem-left').classList.add('grow');
-                document.getElementById('stem-center').classList.add('grow');
-                document.getElementById('stem-right').classList.add('grow');
-            }, 200);
+                document.getElementById('stem1').classList.add('grow');
+                document.getElementById('stem2').classList.add('grow');
+                document.getElementById('stem3').classList.add('grow');
+            }, 300);
 
-            // Munculkan kartu surat cinta
+            // Tampilkan kartu pesan cinta setelah mawar mekar sempurna (6.5 detik)
             setTimeout(() => {
-                messageCard.style.display = 'block';
-                setTimeout(() => messageCard.classList.add('show'), 50);
-            }, 3800);
+                messageCard.classList.remove('hidden');
+                setTimeout(() => {
+                    messageCard.classList.add('show');
+                    setTimeout(() => {
+                        messageCard.classList.add('alive-flow');
+                        activeTarget = messageCard;
+                    }, 800);
+                }, 100);
+            }, 6500);
+        });
+
+        closeBtn.addEventListener('click', () => {
+            activeTarget = null;
+            messageCard.classList.remove('alive-flow');
+            messageCard.classList.remove('show');
+            messageCard.style.transform = 'scale(0.8) translateZ(-100px)';
+            setTimeout(() => { messageCard.classList.add('hidden'); }, 1000);
+            bgMusic.pause();
         });
     </script>
 </body>
