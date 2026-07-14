@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Special for Laila</title>
     <style>
         body, html {
@@ -17,6 +17,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: fixed; /* Mencegah pull-to-refresh atau geser layar di mobile */
         }
 
         /* Welcome Screen */
@@ -25,22 +26,24 @@
             z-index: 10;
             position: absolute;
             background: rgba(20, 2, 6, 0.6);
-            padding: 40px;
+            padding: 30px 20px;
             border-radius: 20px;
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 30, 60, 0.3);
             box-shadow: 0 0 30px rgba(255, 30, 60, 0.2);
+            width: 80%;
+            max-width: 320px;
         }
 
         .heart-icon {
-            font-size: 65px;
+            font-size: 55px;
             animation: pulse 0.9s infinite;
             filter: drop-shadow(0 0 20px #e60026);
             cursor: default;
         }
 
         h1 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 400;
             letter-spacing: 1px;
             margin: 15px 0 5px 0;
@@ -49,8 +52,8 @@
 
         #status {
             color: #ff4d6d;
-            font-size: 0.85rem;
-            margin-bottom: 25px;
+            font-size: 0.75rem;
+            margin-bottom: 20px;
             font-family: 'Courier New', Courier, monospace;
             letter-spacing: 2px;
             font-weight: bold;
@@ -60,19 +63,14 @@
             background: linear-gradient(45deg, #d90429, #ef233c);
             color: white;
             border: none;
-            padding: 14px 40px;
-            font-size: 0.95rem;
+            padding: 12px 35px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             border-radius: 30px;
             letter-spacing: 1px;
             box-shadow: 0 4px 20px rgba(217, 4, 41, 0.5);
             transition: all 0.3s ease;
-        }
-
-        #start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(255, 30, 60, 0.8);
         }
 
         /* Canvases */
@@ -84,34 +82,27 @@
             height: 100%;
         }
         
-        #heart {
-            z-index: 1;
-            display: none;
-        }
+        #heart { z-index: 1; display: none; }
+        #falling-hearts { z-index: 2; display: none; pointer-events: none; }
 
-        #falling-hearts {
-            z-index: 2;
-            display: none;
-            pointer-events: none;
-        }
-
-        /* Message Card (Modal) */
+        /* Message Card (Optimized for 1 Screen View) */
         #message-card {
             position: absolute;
             z-index: 5;
-            background: rgba(18, 2, 5, 0.92);
+            background: rgba(18, 2, 5, 0.94);
             border: 1px solid rgba(230, 0, 38, 0.6);
-            padding: 35px;
+            padding: 22px;
             border-radius: 20px;
-            max-width: 360px;
+            max-width: 330px;
             width: 85%;
-            box-shadow: 0 0 40px rgba(230, 0, 38, 0.5);
+            box-shadow: 0 0 35px rgba(230, 0, 38, 0.5);
             text-align: left;
             backdrop-filter: blur(15px);
             opacity: 0;
             transform: scale(0.9);
             transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
+            box-sizing: border-box;
         }
 
         #message-card.show {
@@ -120,57 +111,66 @@
             pointer-events: auto;
         }
 
-        .hidden {
-            display: none;
-        }
+        .hidden { display: none; }
 
         #close-btn {
             float: right;
             cursor: pointer;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: #888;
             transition: color 0.2s;
+            line-height: 1;
         }
 
-        #close-btn:hover {
-            color: #ff1e3c;
-        }
+        #close-btn:hover { color: #ff1e3c; }
 
         h2 {
             color: #ef233c;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             margin-top: 0;
-            letter-spacing: 3px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
             font-weight: 600;
         }
 
         .recipient {
             font-weight: 600;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
+            font-size: 1.15rem;
+            margin-top: 0;
+            margin-bottom: 10px;
             color: #ffe5ec;
         }
 
         .message {
-            font-size: 0.98rem;
-            line-height: 1.7;
+            font-size: 0.88rem;
+            line-height: 1.55;
             color: #f7f7f7;
             font-weight: 300;
+            margin: 0;
         }
 
         .signature {
             text-align: right;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: #ff4d6d;
-            margin-top: 25px;
+            margin-top: 15px;
+            margin-bottom: 0;
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.08); }
             100% { transform: scale(1); }
+        }
+
+        /* Responsive adjustments agar muat 1 layar hp kecil */
+        @media (max-height: 667px) {
+            #message-card { padding: 18px; width: 88%; }
+            .message { font-size: 0.82rem; line-height: 1.5; }
+            .recipient { margin-bottom: 6px; font-size: 1.05rem; }
+            .signature { margin-top: 10px; }
         }
     </style>
 </head>
@@ -188,12 +188,12 @@
 
     <div id="message-card" class="hidden">
         <span id="close-btn">&times;</span>
-        <h2>UNTUK LAILA</h2>
+        <h2>JUST FOR YOU</h2>
         <p class="recipient">Hai cantikk,</p>
         <p class="message">
-            Aku sengaja bikin ini bukan cuma buat pamer kode, tapi karena kadang isi kepalaku terlalu penuh kalau harus diomongin langsung.<br><br>
-            Kamu tahu kan, aku bukan tipe orang yang pinter ngerangkai kata-kata manis. Tapi sejak ada kamu, banyak hal sederhana yang tiba-tiba terasa jauh lebih hidup. Hal-hal kecil yang kita laluin bareng, cerita-cerita nggak penting yang kita bagi, semuanya selalu berhasil bikin aku bersyukur.<br><br>
-            Makasih ya sayanggg udah bersedia jalan di samping aku, berbagi tawa, dan nerima aku apa adanya. Semoga waktu-waktu ke depan tetap selalu seru buat kita lewati berdua.
+            I made this code not just to show off, tapi karena kadang *it's way easier* buat aku nulis apa yang ada di kepala dibanding ngomong langsung.<br><br>
+            You know I'm not the type who's good with sweet words. Tapi sejak ada kamu, *everything just feels different in a good way*. Hal-hal kecil yang kita laluin bareng, or even our random late-night talks, selalu berhasil bikin aku senyum sendiri.<br><br>
+            Thank you ya sayanggg for being by my side and accepting me just the way I am. Let's make more good memories ahead, shall we?
         </p>
         <p class="signature">~ Putra</p>
     </div>
@@ -235,7 +235,10 @@
             reset(canvasWidth, canvasHeight, index, total) {
                 this.t = (index / total) * Math.PI * 2;
                 this.word = words[Math.floor(Math.random() * words.length)];
-                this.baseScale = 9 + Math.random() * 3;
+                
+                // Menyesuaikan skala detak jantung berdasarkan lebar layar HP/PC agar pas di tengah
+                const isMobile = canvasWidth < 600;
+                this.baseScale = isMobile ? (6 + Math.random() * 2) : (9 + Math.random() * 3);
                 
                 const point = getHeartPoint(this.t, this.baseScale);
                 this.targetX = canvasWidth / 2 + point.x;
@@ -246,7 +249,7 @@
                 
                 this.speed = Math.random() * 0.02 + 0.015;
                 this.opacity = Math.random() * 0.4 + 0.6;
-                this.size = Math.random() * 8 + 10;
+                this.size = isMobile ? (Math.random() * 5 + 8) : (Math.random() * 8 + 10);
             }
 
             update(beatFactor) {
@@ -276,9 +279,9 @@
             reset() {
                 this.x = Math.random() * canvasFalling.width;
                 this.y = -20;
-                this.size = Math.random() * 15 + 10;
-                this.speedY = Math.random() * 1.5 + 1;
-                this.speedX = Math.sin(Math.random() * 2) * 0.5;
+                this.size = Math.random() * 12 + 8;
+                this.speedY = Math.random() * 1.2 + 0.8;
+                this.speedX = Math.sin(Math.random() * 2) * 0.4;
                 this.opacity = Math.random() * 0.5 + 0.4;
                 const heartTypes = ['❤️', '💖', '💝', '💕'];
                 this.char = heartTypes[Math.floor(Math.random() * heartTypes.length)];
@@ -301,7 +304,7 @@
 
         const heartParticles = [];
         const fallingHearts = [];
-        const totalParticles = 250; 
+        const totalParticles = 230; 
 
         function initParticles() {
             heartParticles.length = 0;
@@ -310,7 +313,7 @@
             }
 
             fallingHearts.length = 0;
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < 30; i++) {
                 fallingHearts.push(new FallingHeart());
             }
         }
@@ -319,7 +322,7 @@
         function animateHeart() {
             ctxHeart.clearRect(0, 0, canvasHeart.width, canvasHeart.height);
             tick += 0.05;
-            const beatFactor = 1 + Math.abs(Math.sin(tick)) * 0.15;
+            const beatFactor = 1 + Math.abs(Math.sin(tick)) * 0.12;
 
             heartParticles.forEach(p => {
                 p.update(beatFactor);
