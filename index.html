@@ -143,7 +143,7 @@
             width: 100%; height: 100%;
         }
         
-        #initial-rain { z-index: 1; } /* Canvas untuk teks hujan fase awal */
+        #initial-rain { z-index: 1; } 
         #heart { z-index: 2; display: none; }
         #falling-hearts { z-index: 3; display: none; pointer-events: none; }
 
@@ -275,18 +275,17 @@
 </head>
 <body>
 
-    <!-- Pilihan alternatif: Langsung memutar Thinking Out Loud lewat internet -->
-<audio id="bg-music" loop preload="auto">
-    <source src="https://pub-c5e31b5cdafb419a86a69d5d340a955c.r2.dev/Ed%20Sheeran%20-%20Thinking%20Out%20Loud.mp3" type="audio/mpeg">
-</audio>
-    <!-- Canvas Fase Awal: Teks Hujan Berjatuhan -->
+    <!-- LINK AUDIO INTERNET TERBARU YANG STABIL -->
+    <audio id="bg-music" loop preload="auto" crossorigin="anonymous">
+        <source src="https://files.catbox.moe/5m3lqp.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Canvas Fase Awal -->
     <canvas id="initial-rain"></canvas>
 
     <!-- Kontainer Layar Awal -->
     <div class="perspective-container" id="welcome-container">
         <div id="welcome-screen-wrapper" class="alive-flow">
-            
-            <!-- Kartu Utama -->
             <div id="welcome-screen">
                 <div class="glare" id="welcome-glare"></div>
                 <div class="heart-icon">❤️</div>
@@ -294,7 +293,6 @@
                 <p id="status">TAP TO OPEN MY HONEST FEELINGS...</p>
                 <button id="start-btn">BUKA SEKARANG</button>
             </div>
-
         </div>
     </div>
 
@@ -320,7 +318,6 @@
     </div>
 
     <script>
-        // --- DEKLARASI ELEMEN ---
         const startBtn = document.getElementById('start-btn');
         const bgMusic = document.getElementById('bg-music');
         const welcomeContainer = document.getElementById('welcome-container');
@@ -352,7 +349,7 @@
         window.addEventListener('resize', resizeCanvases);
         resizeCanvases();
 
-        // --- FASE 1: SISTEM TEKS HUJAN BERJATUHAN ---
+        // FASE 1: TEXT RAIN
         class RainText {
             constructor() { this.reset(); this.y = Math.random() * canvasRain.height; }
             reset() {
@@ -360,7 +357,7 @@
                 this.y = -40;
                 this.word = rainWords[Math.floor(Math.random() * rainWords.length)];
                 this.speed = Math.random() * 1.5 + 0.8;
-                this.opacity = Math.random() * 0.25 + 0.15; // Dibuat soft agar tidak menutupi kartu
+                this.opacity = Math.random() * 0.25 + 0.15;
                 this.size = Math.random() * 4 + 11;
             }
             update() {
@@ -382,9 +379,9 @@
             rainParticles.forEach(p => { p.update(); p.draw(); });
             animationRainId = requestAnimationFrame(animateRain);
         }
-        animateRain(); // Langsung jalan di awal loading
+        animateRain();
 
-        // --- FASE 2: MODEL HATI & ELEMEN TRANSISI ---
+        // FASE 2: HATI 3D
         function getHeartPoint(t, scale) {
             const x = 16 * Math.pow(Math.sin(t), 3);
             const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
@@ -472,7 +469,7 @@
             animationFallingId = requestAnimationFrame(animateFalling);
         }
 
-        // --- INTERAKSI TILT 3D PARALLAX ---
+        // 3D TILT EFFECT
         function handleGlobalTilt(e) {
             if (!activeTarget) return;
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -521,27 +518,26 @@
         window.addEventListener('touchmove', handleGlobalTilt, { passive: true });
         window.addEventListener('touchend', resetGlobalTilt);
 
-        // --- KLIK AKSI & PERBAIKAN PLAY LAGU MANDATORI ---
+        // KLIK TOMBOL & SINKRONISASI AUDIO INTERNET MULTI-PLATFORM
         startBtn.addEventListener('click', () => {
-            // Memaksa browser memutar musik secara sinkron lewat interaksi fisik
+            bgMusic.muted = false;
             bgMusic.volume = 1.0;
-            const playPromise = bgMusic.play();
             
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log("Musik berhasil diputar!");
-                }).catch(error => {
-                    console.log("Playback gagal, mencoba alternatif play:", error);
-                    // Cara alternatif jika device tertentu memblokir instan thread
-                    setTimeout(() => { bgMusic.play(); }, 50);
+            const forcePlay = () => {
+                bgMusic.play().then(() => {
+                    console.log("Audio online berhasil diputar!");
+                }).catch(err => {
+                    console.log("Browser memblokir, memicu trigger global...", err);
+                    document.addEventListener('click', () => { bgMusic.play(); }, { once: true });
                 });
-            }
+            };
+            
+            forcePlay();
 
             activeTarget = null;
             welcomeWrapper.style.opacity = '0';
             welcomeWrapper.style.transform = 'scale(0.85) translateZ(-80px)';
             
-            // Hentikan hujan teks fase awal
             cancelAnimationFrame(animationRainId);
             canvasRain.style.display = 'none';
 
