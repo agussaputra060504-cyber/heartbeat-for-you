@@ -275,9 +275,9 @@
 </head>
 <body>
 
-    <!-- LINK AUDIO INTERNET TERBARU YANG STABIL -->
-    <audio id="bg-music" loop preload="auto" crossorigin="anonymous">
-        <source src="https://files.catbox.moe/5m3lqp.mp3" type="audio/mpeg">
+    <!-- MEMANGGIL FILE LOKAL YANG SUDAH KAMU DOWNLOAD -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="thinking.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Canvas Fase Awal -->
@@ -518,21 +518,22 @@
         window.addEventListener('touchmove', handleGlobalTilt, { passive: true });
         window.addEventListener('touchend', resetGlobalTilt);
 
-        // KLIK TOMBOL & SINKRONISASI AUDIO INTERNET MULTI-PLATFORM
+        // KLIK TOMBOL & EKSEKUSI PEMUTARAN AUDIO LOKAL
         startBtn.addEventListener('click', () => {
             bgMusic.muted = false;
             bgMusic.volume = 1.0;
             
-            const forcePlay = () => {
+            const forcePlayLocal = () => {
                 bgMusic.play().then(() => {
-                    console.log("Audio online berhasil diputar!");
+                    console.log("Sukses memutar file lokal!");
                 }).catch(err => {
-                    console.log("Browser memblokir, memicu trigger global...", err);
-                    document.addEventListener('click', () => { bgMusic.play(); }, { once: true });
+                    console.log("Ditolak browser sistem lokal, memicu fallback...", err);
+                    // Force play cadangan
+                    bgMusic.play();
                 });
             };
             
-            forcePlay();
+            forcePlayLocal();
 
             activeTarget = null;
             welcomeWrapper.style.opacity = '0';
