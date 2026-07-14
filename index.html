@@ -10,7 +10,7 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #030204;
+            background-color: #0b0103;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow: hidden;
             color: #fff;
@@ -24,16 +24,18 @@
             text-align: center;
             z-index: 10;
             position: absolute;
-            background: rgba(10, 5, 8, 0.4);
+            background: rgba(20, 2, 6, 0.6);
             padding: 40px;
             border-radius: 20px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 30, 60, 0.3);
+            box-shadow: 0 0 30px rgba(255, 30, 60, 0.2);
         }
 
         .heart-icon {
-            font-size: 60px;
-            animation: pulse 1.0s infinite;
-            filter: drop-shadow(0 0 15px #ff2a74);
+            font-size: 65px;
+            animation: pulse 0.9s infinite;
+            filter: drop-shadow(0 0 20px #e60026);
             cursor: default;
         }
 
@@ -46,54 +48,64 @@
         }
 
         #status {
-            color: #ff75a0;
+            color: #ff4d6d;
             font-size: 0.85rem;
             margin-bottom: 25px;
             font-family: 'Courier New', Courier, monospace;
             letter-spacing: 2px;
+            font-weight: bold;
         }
 
         #start-btn {
-            background: linear-gradient(45deg, #ff2a74, #ff5e97);
+            background: linear-gradient(45deg, #d90429, #ef233c);
             color: white;
             border: none;
-            padding: 14px 35px;
+            padding: 14px 40px;
             font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             border-radius: 30px;
             letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(255, 42, 116, 0.4);
+            box-shadow: 0 4px 20px rgba(217, 4, 41, 0.5);
             transition: all 0.3s ease;
         }
 
         #start-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(255, 42, 116, 0.7);
+            box-shadow: 0 6px 25px rgba(255, 30, 60, 0.8);
         }
 
-        /* Canvas */
+        /* Canvases */
         canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+        }
+        
+        #heart {
             z-index: 1;
             display: none;
+        }
+
+        #falling-hearts {
+            z-index: 2;
+            display: none;
+            pointer-events: none;
         }
 
         /* Message Card (Modal) */
         #message-card {
             position: absolute;
             z-index: 5;
-            background: rgba(15, 8, 12, 0.88);
-            border: 1px solid rgba(255, 42, 116, 0.5);
+            background: rgba(18, 2, 5, 0.92);
+            border: 1px solid rgba(230, 0, 38, 0.6);
             padding: 35px;
             border-radius: 20px;
             max-width: 360px;
             width: 85%;
-            box-shadow: 0 0 35px rgba(255, 42, 116, 0.4);
+            box-shadow: 0 0 40px rgba(230, 0, 38, 0.5);
             text-align: left;
             backdrop-filter: blur(15px);
             opacity: 0;
@@ -116,16 +128,16 @@
             float: right;
             cursor: pointer;
             font-size: 1.4rem;
-            color: #666;
+            color: #888;
             transition: color 0.2s;
         }
 
         #close-btn:hover {
-            color: #ff2a74;
+            color: #ff1e3c;
         }
 
         h2 {
-            color: #ff2a74;
+            color: #ef233c;
             font-size: 0.9rem;
             margin-top: 0;
             letter-spacing: 3px;
@@ -136,20 +148,20 @@
             font-weight: 600;
             font-size: 1.3rem;
             margin-bottom: 15px;
-            color: #ffccd9;
+            color: #ffe5ec;
         }
 
         .message {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #ececec;
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: #f7f7f7;
             font-weight: 300;
         }
 
         .signature {
             text-align: right;
-            font-size: 0.9rem;
-            color: #ff75a0;
+            font-size: 0.95rem;
+            color: #ff4d6d;
             margin-top: 25px;
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
@@ -157,55 +169,58 @@
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.12); }
+            50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Tampilan Awal Baru yang Lebih Manis -->
     <div id="welcome-screen">
         <div class="heart-icon">❤️</div>
         <h1>special-for-laila</h1>
-        <p id="status">CLIK TO UNLOCK MY HEART...</p>
-        <button id="start-btn">OPEN IT</button>
+        <p id="status">TAP TO OPEN MY HONEST FEELINGS...</p>
+        <button id="start-btn">BUKA SEKARANG</button>
     </div>
 
-    <!-- Canvas Efek Hati -->
     <canvas id="heart"></canvas>
+    <canvas id="falling-hearts"></canvas>
 
-    <!-- Kotak Surat Romantis yang Ditingkatkan -->
     <div id="message-card" class="hidden">
         <span id="close-btn">&times;</span>
-        <h2>DEAREST LAILA</h2>
-        <p class="recipient">Hai Laila,</p>
+        <h2>KHUSUS UNTUK LAILA</h2>
+        <p class="recipient">Hai cantikk,</p>
         <p class="message">
-            Aku sengaja merangkai barisan kode ini khusus untukmu. Di saat komputer menjalankan programnya, detak jantung ini juga berdetak selaras dengan namamu.<br><br>
-            Setiap partikel cinta yang terbang membentuk hati di layar ini adalah representasi dari perasaanku yang tak pernah berhenti mengarah kepadamu.<br><br>
-            Di dunia digital maupun nyata, kamu akan selalu jadi algoritma terindah yang melengkapi hidupku. Tetap bersamaku ya? ❤️
+            Mungkin aku bukan tipe cowok yang jago merangkai kata-kata puitis secara langsung. Karena itu, lewat barisan kode sederhana ini, aku ingin menyampaikan apa yang ada di kepalaku selama ini.<br><br>
+            Sama seperti detak animasi di layar ini yang bergerak tanpa henti, setiap hari pikiranku juga selalu berputar dan kembali ke kamu. Bagiku, kehadiran kamu itu membawa warna baru yang bikin hari-hariku jadi jauh lebih bermakna.<br><br>
+            Makasih ya sayanggg sudah hadir dan jadi bagian cerita dalam hidupku. Tetap sama-sama terus di sampingku ya? ❤️
         </p>
-        <p class="signature">~ dari Putra yang menyayangimu</p>
+        <p class="signature">~ dari Putra yang selalu sayang kamu</p>
     </div>
 
     <script>
         const startBtn = document.getElementById('start-btn');
         const welcomeScreen = document.getElementById('welcome-screen');
-        const canvas = document.getElementById('heart');
+        const canvasHeart = document.getElementById('heart');
+        const canvasFalling = document.getElementById('falling-hearts');
         const messageCard = document.getElementById('message-card');
         const closeBtn = document.getElementById('close-btn');
-        const ctx = canvas.getContext('2d');
-
-        let animationFrameId;
         
-        // Kata-kata manis yang akan terbang membentuk hati
-        const words = ["Laila", "Love You", "Forever", "Sayangku", "My Universe", "Bidadariku", "Te Amo", "Milikku", "Always Yours", "❤️"];
+        const ctxHeart = canvasHeart.getContext('2d');
+        const ctxFalling = canvasFalling.getContext('2d');
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        let animationHeartId, animationFallingId;
+        
+        // Panggilan khas kamu ("sayanggg", "cantikk") dimasukkan ke dalam kata-kata yang terbang
+        const words = ["Laila", "sayanggg", "cantikk", "Bahagiaku", "Putra & Laila", "Semogaselamanya", "❤️", "My Favorite", "Salingjaga"];
+
+        function resizeCanvases() {
+            canvasHeart.width = window.innerWidth;
+            canvasHeart.height = window.innerHeight;
+            canvasFalling.width = window.innerWidth;
+            canvasFalling.height = window.innerHeight;
         }
-        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('resize', resizeCanvases);
 
         function getHeartPoint(t, scale) {
             const x = 16 * Math.pow(Math.sin(t), 3);
@@ -213,7 +228,8 @@
             return { x: x * scale, y: y * scale };
         }
 
-        class Particle {
+        // --- SISTEM PARTIKEL HATI BESAR ---
+        class HeartParticle {
             constructor(canvasWidth, canvasHeight) {
                 this.reset(canvasWidth, canvasHeight);
             }
@@ -237,57 +253,110 @@
 
             update(beatFactor) {
                 const point = getHeartPoint(this.t, this.scale * beatFactor);
-                const actualTargetX = canvas.width / 2 + point.x;
-                const actualTargetY = canvas.height / 2 + point.y;
+                const actualTargetX = canvasHeart.width / 2 + point.x;
+                const actualTargetY = canvasHeart.height / 2 + point.y;
 
                 this.x += (actualTargetX - this.x) * this.speed;
                 this.y += (actualTargetY - this.y) * this.speed;
             }
 
             draw() {
-                ctx.fillStyle = `rgba(255, 64, 129, ${this.opacity})`;
-                ctx.font = `bold ${this.size}px sans-serif`;
-                ctx.fillText(this.word, this.x, this.y);
+                ctxHeart.fillStyle = `rgba(239, 35, 60, ${this.opacity})`;
+                ctxHeart.font = `bold ${this.size}px sans-serif`;
+                ctxHeart.fillText(this.word, this.x, this.y);
             }
         }
 
-        const particles = [];
+        // --- SISTEM ANIMASI EMOJI BERJATUHAN ---
+        class FallingHeart {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvasFalling.height - canvasFalling.height;
+            }
+
+            reset() {
+                this.x = Math.random() * canvasFalling.width;
+                this.y = -20;
+                this.size = Math.random() * 15 + 10;
+                this.speedY = Math.random() * 1.5 + 1;
+                this.speedX = Math.sin(Math.random() * 2) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.4;
+                const heartTypes = ['❤️', '💖', '💝', '💕'];
+                this.char = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y > canvasFalling.height) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctxFalling.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctxFalling.font = `${this.size}px sans-serif`;
+                ctxFalling.fillText(this.char, this.x, this.y);
+            }
+        }
+
+        const heartParticles = [];
+        const fallingHearts = [];
+
         function initParticles() {
-            particles.length = 0;
-            const particleCount = 140; // Ditambah sedikit agar bentuk hatinya lebih padat
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle(canvas.width, canvas.height));
+            heartParticles.length = 0;
+            for (let i = 0; i < 150; i++) {
+                heartParticles.push(new HeartParticle(canvasHeart.width, canvasHeart.height));
+            }
+
+            fallingHearts.length = 0;
+            for (let i = 0; i < 40; i++) {
+                fallingHearts.push(new FallingHeart());
             }
         }
 
         let tick = 0;
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function animateHeart() {
+            ctxHeart.clearRect(0, 0, canvasHeart.width, canvasHeart.height);
             tick += 0.05;
             const beatFactor = 1 + Math.abs(Math.sin(tick)) * 0.15;
 
-            particles.forEach(p => {
+            heartParticles.forEach(p => {
                 p.update(beatFactor);
                 p.draw();
             });
 
-            animationFrameId = requestAnimationFrame(animate);
+            animationHeartId = requestAnimationFrame(animateHeart);
+        }
+
+        function animateFalling() {
+            ctxFalling.clearRect(0, 0, canvasFalling.width, canvasFalling.height);
+            
+            fallingHearts.forEach(h => {
+                h.update();
+                h.draw();
+            });
+
+            animationFallingId = requestAnimationFrame(animateFalling);
         }
 
         startBtn.addEventListener('click', () => {
             welcomeScreen.classList.add('hidden');
-            canvas.style.display = 'block';
-            resizeCanvas();
+            canvasHeart.style.display = 'block';
+            canvasFalling.style.display = 'block';
+            
+            resizeCanvases();
             initParticles();
-            animate();
+            
+            animateHeart();
+            animateFalling();
 
-            // Memunculkan kotak surat setelah 6 detik
             setTimeout(() => {
                 messageCard.classList.remove('hidden');
                 setTimeout(() => {
                     messageCard.classList.add('show');
                 }, 100);
-            }, 6000);
+            }, 5000);
         });
 
         closeBtn.addEventListener('click', () => {
