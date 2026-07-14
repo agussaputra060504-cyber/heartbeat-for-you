@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heartbeat.js</title>
+    <title>Special for Laila</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #050505;
-            font-family: 'Courier New', Courier, monospace;
+            background-color: #030204;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow: hidden;
             color: #fff;
             display: flex;
@@ -24,41 +24,52 @@
             text-align: center;
             z-index: 10;
             position: absolute;
+            background: rgba(10, 5, 8, 0.4);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
         }
 
         .heart-icon {
-            font-size: 50px;
-            animation: pulse 1.2s infinite;
+            font-size: 60px;
+            animation: pulse 1.0s infinite;
+            filter: drop-shadow(0 0 15px #ff2a74);
+            cursor: default;
         }
 
         h1 {
-            font-size: 2rem;
-            letter-spacing: 2px;
-            margin: 10px 0;
+            font-size: 1.8rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin: 15px 0 5px 0;
+            color: #fff;
         }
 
         #status {
-            color: #888;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+            color: #ff75a0;
+            font-size: 0.85rem;
+            margin-bottom: 25px;
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 2px;
         }
 
         #start-btn {
-            background-color: #ff2a74;
+            background: linear-gradient(45deg, #ff2a74, #ff5e97);
             color: white;
             border: none;
-            padding: 12px 30px;
-            font-size: 1rem;
-            font-weight: bold;
+            padding: 14px 35px;
+            font-size: 0.95rem;
+            font-weight: 600;
             cursor: pointer;
-            border-radius: 25px;
+            border-radius: 30px;
             letter-spacing: 1px;
-            transition: 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 42, 116, 0.4);
+            transition: all 0.3s ease;
         }
 
         #start-btn:hover {
-            background-color: #ff5e97;
-            box-shadow: 0 0 15px #ff2a74;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 42, 116, 0.7);
         }
 
         /* Canvas */
@@ -76,18 +87,18 @@
         #message-card {
             position: absolute;
             z-index: 5;
-            background: rgba(20, 10, 15, 0.85);
-            border: 1px solid #ff2a74;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 350px;
+            background: rgba(15, 8, 12, 0.88);
+            border: 1px solid rgba(255, 42, 116, 0.5);
+            padding: 35px;
+            border-radius: 20px;
+            max-width: 360px;
             width: 85%;
-            box-shadow: 0 0 25px rgba(255, 42, 116, 0.3);
+            box-shadow: 0 0 35px rgba(255, 42, 116, 0.4);
             text-align: left;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             opacity: 0;
             transform: scale(0.9);
-            transition: all 1s ease;
+            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
         }
 
@@ -104,8 +115,9 @@
         #close-btn {
             float: right;
             cursor: pointer;
-            font-size: 1.5rem;
-            color: #888;
+            font-size: 1.4rem;
+            color: #666;
+            transition: color 0.2s;
         }
 
         #close-btn:hover {
@@ -114,59 +126,66 @@
 
         h2 {
             color: #ff2a74;
-            font-size: 1.2rem;
+            font-size: 0.9rem;
             margin-top: 0;
+            letter-spacing: 3px;
+            font-weight: 600;
         }
 
         .recipient {
-            font-weight: bold;
-            font-size: 1.1rem;
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #ffccd9;
         }
 
         .message {
             font-size: 0.95rem;
-            line-height: 1.5;
-            color: #ddd;
+            line-height: 1.6;
+            color: #ececec;
+            font-weight: 300;
         }
 
         .signature {
             text-align: right;
-            font-size: 0.8rem;
-            color: #888;
-            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #ff75a0;
+            margin-top: 25px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+            50% { transform: scale(1.12); }
             100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Tampilan Awal Sebelum di Klik -->
+    <!-- Tampilan Awal Baru yang Lebih Manis -->
     <div id="welcome-screen">
         <div class="heart-icon">❤️</div>
-        <h1>heartbeat.js</h1>
-        <p id="status">Ready...</p>
-        <button id="start-btn">RUN HEARTBEAT.JS</button>
+        <h1>special-for-laila.exe</h1>
+        <p id="status">CLIK TO UNLOCK MY HEART...</p>
+        <button id="start-btn">OPEN IT</button>
     </div>
 
     <!-- Canvas Efek Hati -->
     <canvas id="heart"></canvas>
 
-    <!-- Kotak Surat Romantis Akhir -->
+    <!-- Kotak Surat Romantis yang Ditingkatkan -->
     <div id="message-card" class="hidden">
         <span id="close-btn">&times;</span>
-        <h2>FOR YOU</h2>
-        <p class="recipient">Dear Laila,</p>
+        <h2>DEAREST LAILA</h2>
+        <p class="recipient">Hai Laila,</p>
         <p class="message">
-            I coded this heartbeat for you...<br><br>
-            Every line of code, every pixel, and every beat is a reminder of how much you mean to me.<br><br>
-            No matter where life takes us, my heart will always run in an infinite loop for you, beating forever. ❤️
+            Aku sengaja merangkai barisan kode ini khusus untukmu. Di saat komputer menjalankan programnya, detak jantung ini juga berdetak selaras dengan namamu.<br><br>
+            Setiap partikel cinta yang terbang membentuk hati di layar ini adalah representasi dari perasaanku yang tak pernah berhenti mengarah kepadamu.<br><br>
+            Di dunia digital maupun nyata, kamu akan selalu jadi algoritma terindah yang melengkapi hidupku. Tetap bersamaku ya? ❤️
         </p>
-        <p class="signature">- coded with love by Putra</p>
+        <p class="signature">~ dari Putra yang menyayangimu</p>
     </div>
 
     <script>
@@ -179,8 +198,8 @@
 
         let animationFrameId;
         
-        // Kamu bisa menambah atau mengganti kata-kata terbang di bawah ini
-        const words = ["love you", "forever", "always", "heartbeat", "my love", "kamu", "je t'aime", "te amo", "mine"];
+        // Kata-kata manis yang akan terbang membentuk hati
+        const words = ["Laila", "Love You", "Forever", "Sayangku", "My Universe", "Bidadariku", "Te Amo", "Milikku", "Always Yours", "❤️"];
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -188,7 +207,6 @@
         }
         window.addEventListener('resize', resizeCanvas);
 
-        // Rumus matematika bentuk hati parametrik
         function getHeartPoint(t, scale) {
             const x = 16 * Math.pow(Math.sin(t), 3);
             const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
@@ -214,7 +232,7 @@
                 
                 this.speed = Math.random() * 0.02 + 0.01;
                 this.opacity = Math.random() * 0.5 + 0.5;
-                this.size = Math.random() * 10 + 8;
+                this.size = Math.random() * 11 + 9;
             }
 
             update(beatFactor) {
@@ -227,8 +245,8 @@
             }
 
             draw() {
-                ctx.fillStyle = `rgba(255, 42, 116, ${this.opacity})`;
-                ctx.font = `${this.size}px 'Courier New'`;
+                ctx.fillStyle = `rgba(255, 64, 129, ${this.opacity})`;
+                ctx.font = `bold ${this.size}px sans-serif`;
                 ctx.fillText(this.word, this.x, this.y);
             }
         }
@@ -236,7 +254,7 @@
         const particles = [];
         function initParticles() {
             particles.length = 0;
-            const particleCount = 120;
+            const particleCount = 140; // Ditambah sedikit agar bentuk hatinya lebih padat
             for (let i = 0; i < particleCount; i++) {
                 particles.push(new Particle(canvas.width, canvas.height));
             }
@@ -263,7 +281,7 @@
             initParticles();
             animate();
 
-            // Memunculkan kotak surat setelah 6 detik animasi berjalan
+            // Memunculkan kotak surat setelah 6 detik
             setTimeout(() => {
                 messageCard.classList.remove('hidden');
                 setTimeout(() => {
