@@ -79,7 +79,7 @@
             100% { transform: scale(1); }
         }
 
-        /* --- LAYAR UTAMA & PERSPEKTIF --- */
+        /* --- LAYAR UTAMA --- */
         .perspective-container {
             position: absolute;
             z-index: 10;
@@ -165,7 +165,7 @@
         #garden-container { z-index: 8; display: none; }
         #falling-hearts { z-index: 3; display: none; pointer-events: none; }
 
-        /* --- WADAH MAWAR TUNGGAL LEBIH KECIL & DIBAWAH --- */
+        /* --- WADAH MAWAR TUNGGAL --- */
         #garden-container {
             position: absolute;
             top: 50%;
@@ -191,7 +191,6 @@
             transform: scaleY(1);
         }
 
-        /* Kelopak hijau penyangga */
         .sepal-cup {
             position: absolute;
             top: -4px;
@@ -228,7 +227,6 @@
             transform: scale(1) rotate(var(--rot));
         }
         
-        /* Ukuran wadah bunga disesuaikan dengan mawar mini baru */
         .flower-head {
             position: absolute;
             left: 50%;
@@ -241,7 +239,6 @@
             transform: translateX(-50%) scale(1);
         }
 
-        /* Desain kelopak mawar miniatur */
         .petal {
             position: absolute;
             left: 50%;
@@ -259,7 +256,6 @@
             transform: translate(-50%, -100%) scale(var(--sc)) rotate(var(--rt));
         }
 
-        /* Inti kuncup spiral pekat */
         .flower-center {
             position: absolute;
             background: linear-gradient(to bottom, #4a0007, #210003);
@@ -370,12 +366,10 @@
 </head>
 <body>
 
-    <!-- AUDIO BACKGROUND -->
     <audio id="bg-music" loop preload="auto">
         <source src="thinking.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- LAYAR LOADING PRELOADER -->
     <div id="loading-screen">
         <div class="loading-heart">🌹</div>
         <div class="loading-title">blooming for you</div>
@@ -386,10 +380,8 @@
         <div class="progress-percentage" id="percent">0%</div>
     </div>
 
-    <!-- Canvas Hujan Teks Awal -->
     <canvas id="initial-rain"></canvas>
 
-    <!-- Kontainer Tampilan Depan -->
     <div class="perspective-container" id="welcome-container">
         <div id="welcome-screen-wrapper" class="alive-flow">
             <div id="welcome-screen">
@@ -401,14 +393,11 @@
         </div>
     </div>
 
-    <!-- Canvas Hati Kumpulan Teks & Hati Gugur -->
     <canvas id="heart"></canvas>
     <canvas id="falling-hearts"></canvas>
 
-    <!-- WADAH MAWAR: DILONGGARKAN KE BAWAH AGAR TIDAK NABRAK HATI -->
     <div id="garden-container">
-        <!-- Tinggi batang diubah ke 65px dan posisi diturunkan ke bottom: 95px -->
-        <div class="flower-stem" id="stem1" style="left: 50%; height: 65px; bottom: 95px; transition-delay: 0.2s;">
+        <div class="flower-stem" id="stem1" style="left: 50%; height: 65px; bottom: 110px; transition-delay: 0.2s;">
             <div class="sepal-cup"></div>
             <div class="leaf left" style="top: 32px; --rot: -22deg;"></div>
             <div class="leaf right" style="top: 18px; --rot: 26deg;"></div>
@@ -416,7 +405,6 @@
         </div>
     </div>
 
-    <!-- Kontainer Pesan Utama -->
     <div class="perspective-container">
         <div id="message-card" class="hidden">
             <span id="close-btn">&times;</span>
@@ -456,20 +444,15 @@
         const rainWords = ["Special For Laila", "Pouring my heart into pixels", "Laila", "❤️", "Beautiful", "My Love"];
         const phrases = ["gathering every proof...", "planning something sweet...", "loading assets...", "almost ready to bloom..."];
 
-        // FUNGSI UTAMA: Bunga diperkecil 35% dengan formasi spiral kelopak padat melingkar
+        // Struktur mawar miniatur dengan ukuran ringkas
         function createRoseHead(containerId) {
             const container = document.getElementById(containerId);
             
             const layers = [
-                // Lapisan luar mekar (Lebih kecil)
                 { count: 7, width: 36, height: 34, scale: 1.0,  borderRadius: '45% 45% 50% 50%', zIndex: 5, delayBase: 0.0, rotOffset: 0 },
                 { count: 6, width: 31, height: 30, scale: 0.92, borderRadius: '46% 46% 48% 48%', zIndex: 10, delayBase: 0.3, rotOffset: 25 },
-                
-                // Lapisan tengah
                 { count: 6, width: 25, height: 25, scale: 0.82, borderRadius: '48% 48% 45% 45%', zIndex: 15, delayBase: 0.6, rotOffset: 12 },
                 { count: 6, width: 20, height: 21, scale: 0.72, borderRadius: '50% 50% 43% 43%', zIndex: 20, delayBase: 0.9, rotOffset: 33 },
-                
-                // Kuncup inti spiral melingkar padat
                 { count: 6, width: 14, height: 17, scale: 0.60, borderRadius: '50% 50% 40% 40%', zIndex: 25, delayBase: 1.2, rotOffset: 7 },
                 { count: 5, width: 10, height: 13, scale: 0.48, borderRadius: '50% 50% 35% 35%', zIndex: 30, delayBase: 1.5, rotOffset: 18 },
                 { count: 4, width: 7,  height: 10, scale: 0.35, borderRadius: '50% 50% 30% 30%', zIndex: 35, delayBase: 1.8, rotOffset: 40 }
@@ -679,7 +662,6 @@
             activeTarget.style.transform = `scale(1.02) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         }
 
-        // Reset kemiringan
         function resetGlobalTilt() {
             if (!activeTarget) return;
             activeTarget.style.setProperty('--rx', `0deg`);
@@ -719,7 +701,6 @@
                 document.getElementById('stem1').classList.add('grow');
             }, 300);
 
-            // Munculkan kartu pesan utama
             setTimeout(() => {
                 messageCard.classList.remove('hidden');
                 setTimeout(() => {
