@@ -366,10 +366,12 @@
 </head>
 <body>
 
+    <!-- AUDIO BACKGROUND -->
     <audio id="bg-music" loop preload="auto">
         <source src="thinking.mp3" type="audio/mpeg">
     </audio>
 
+    <!-- LAYAR LOADING PRELOADER -->
     <div id="loading-screen">
         <div class="loading-heart">🌹</div>
         <div class="loading-title">blooming for you</div>
@@ -380,8 +382,10 @@
         <div class="progress-percentage" id="percent">0%</div>
     </div>
 
+    <!-- Canvas Hujan Teks Awal -->
     <canvas id="initial-rain"></canvas>
 
+    <!-- Kontainer Tampilan Depan -->
     <div class="perspective-container" id="welcome-container">
         <div id="welcome-screen-wrapper" class="alive-flow">
             <div id="welcome-screen">
@@ -393,9 +397,11 @@
         </div>
     </div>
 
+    <!-- Canvas Hati Kumpulan Teks & Hati Gugur -->
     <canvas id="heart"></canvas>
     <canvas id="falling-hearts"></canvas>
 
+    <!-- WADAH MAWAR Ttengah pas -->
     <div id="garden-container">
         <div class="flower-stem" id="stem1" style="left: 50%; height: 65px; bottom: 110px; transition-delay: 0.2s;">
             <div class="sepal-cup"></div>
@@ -405,6 +411,7 @@
         </div>
     </div>
 
+    <!-- Kontainer Pesan Utama -->
     <div class="perspective-container">
         <div id="message-card" class="hidden">
             <span id="close-btn">&times;</span>
@@ -444,7 +451,6 @@
         const rainWords = ["Special For Laila", "Pouring my heart into pixels", "Laila", "❤️", "Beautiful", "My Love"];
         const phrases = ["gathering every proof...", "planning something sweet...", "loading assets...", "almost ready to bloom..."];
 
-        // Struktur mawar miniatur dengan ukuran ringkas
         function createRoseHead(containerId) {
             const container = document.getElementById(containerId);
             
@@ -548,7 +554,7 @@
         }
 
         const rainParticles = [];
-        for(let i = 0; i < 40; i++) rainParticles.push(new RainText());
+        for(let i = 0; i < 25; i++) rainParticles.push(new RainText()); // Dioptimasi dari 40 ke 25
 
         function animateRain() {
             ctxRain.clearRect(0, 0, canvasRain.width, canvasRain.height);
@@ -575,7 +581,7 @@
                 this.targetY = canvasHeight / 2 + point.y;
                 this.x = Math.random() * canvasWidth;
                 this.y = Math.random() * canvasHeight;
-                this.speed = Math.random() * 0.02 + 0.015;
+                this.speed = Math.random() * 0.035 + 0.025; // Dipercepat agar berkumpul lebih instan
                 this.opacity = Math.random() * 0.35 + 0.55;
                 this.size = isMobile ? (Math.random() * 4 + 8) : (Math.random() * 6 + 10);
             }
@@ -620,13 +626,13 @@
 
         const heartParticles = [];
         const fallingHearts = [];
-        const totalParticles = 220; 
+        const totalParticles = 140; // Dioptimasi secara agresif dari 220 ke 140 biar HP enteng
 
         function initParticles() {
             heartParticles.length = 0;
             for (let i = 0; i < totalParticles; i++) heartParticles.push(new HeartParticle(canvasHeart.width, canvasHeart.height, i, totalParticles));
             fallingHearts.length = 0;
-            for (let i = 0; i < 30; i++) fallingHearts.push(new FallingHeart());
+            for (let i = 0; i < 20; i++) fallingHearts.push(new FallingHeart()); // Dikurangi dari 30 ke 20
         }
 
         let tick = 0;
@@ -701,6 +707,7 @@
                 document.getElementById('stem1').classList.add('grow');
             }, 300);
 
+            // DIUBAH MENJADI 9 DETIK (9000ms) agar bentuk hatinya sudah sempurna di layar HP sebelum kartu muncul
             setTimeout(() => {
                 messageCard.classList.remove('hidden');
                 setTimeout(() => {
@@ -710,7 +717,7 @@
                         activeTarget = messageCard;
                     }, 800);
                 }, 100);
-            }, 6500);
+            }, 9000); 
         });
 
         closeBtn.addEventListener('click', () => {
